@@ -60,14 +60,14 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | lf | immediate | load a floating point number into the register
 | set | immediate | set all the register's bits to 1
 | clr | immediate | clear all the register's bits to 0
-| sw | immediate | store (write) word to data memory
-| lw | immediate | load (read) word from data memory
+| sw | immediate | store (write) register to data memory
+| lw | immediate | load register (read) from data memory
 | b | jump | branch to the label
 | call | jump | branch to a function and link, used in conjunction with ret
 | ret | jump | return to link at top of link stack if there is something to pop
 
 ## [ARM Suffix Reference](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0473c/CEGBHJCJ.html)
-* allocating unsigned 8-bit integers, so 2^8 suffices possible
+* Allocating unsigned 8-bit integers, so 2^8 suffices possible
 
 | Suffix | Flags | Meaning |
 |--------|-------|---------|

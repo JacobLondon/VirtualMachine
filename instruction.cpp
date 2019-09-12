@@ -6,7 +6,8 @@ jtype::jtype(u8 opcode, u8 status, u64 address)
 
 }
 
-itype::itype(u8 opcode, u8 status, u8 suffix, u8 target, u64 immediate)
+template<class T>
+itype<T>::itype(u8 opcode, u8 status, u8 suffix, u8 target, T immediate)
     : opcode(opcode), status(status), suffix(suffix), target(target), immediate(immediate)
 {
 

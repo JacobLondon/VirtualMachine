@@ -16,14 +16,15 @@ public:
     u64 address;
 };
 
+template<class T>
 class itype : instruction {
 public:
-    itype(u8 opcode, u8 status, u8 suffix, u8 target, u64 immediate);
+    itype(u8 opcode, u8 status, u8 suffix, u8 target, T immediate);
     u8 opcode = 0;
     u8 status = 0;
     u8 suffix = 0;
     u8 target = 0;
-    u64 immediate = 0;
+    T immediate = 0;
 };
 
 class rtype : instruction {

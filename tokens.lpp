@@ -91,6 +91,8 @@
 "r27"       return R27;
 "r28"       return R28;
 "r29"       return R29;
+"r30"       return R30;
+"r31"       return R31;
 
 "s"         return STATUS;
 .           return OTHER;

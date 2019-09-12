@@ -4,13 +4,15 @@
 
 class memory {
 public:
-    memory();
-    memory(u64 inst_size, u64 data_size, u64 reg_file_size);
-
-    std::vector<u64> register_file;
+    memory(u64 dmem_size);
+    
     u8 flags = 0x00;
-    std::vector<instruction> instruction_memory;
-    std::vector<u64> data_memory;
+    u64 pc = 0;
+    const u64 zero = 0;
+    std::vector<u64> iregfile;
+    std::vector<f64> fregfile;
+    std::vector<instruction> imem;
+    std::vector<u64> dmem;
     std::stack<u64> stack;
     std::unordered_map<std::string, u64> labels;
 };
