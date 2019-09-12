@@ -8,10 +8,10 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 * 2 64-bit special registers
   * zero, pc
 * Flag Register (8-bit)
-  * 0x1 - Overflow
-  * 0x2 - Carry
-  * 0x4 - Zero
-  * 0x8 - Negative
+  * 0x1 - Overflow (v)
+  * 0x2 - Carry (c)
+  * 0x4 - Zero (z)
+  * 0x8 - Negative (n)
 ## Memory - Harvard Architecture
 * Instruction Memory
   * On initialization, set to the needed size
@@ -49,10 +49,7 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | nor | register | logical nor
 | or | register | logical or
 | shr | register | logical shift right
-| sra | register | arithmetic shift right
 | shl | register | logical shift left
-| ror | register | rotate right
-| rol | register | rotate left
 | cmp | register | compare and set status register
 | swp | register | swap two registers' data
 | mov | register | move one register's data into another

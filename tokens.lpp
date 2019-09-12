@@ -27,14 +27,11 @@
 "nor"       return NOR;
 "or"        return OR;
 "shr"       return SHR;
-"sra"       return SRA;
 "shl"       return SHL;
-"ror"       return ROR;
-"rol"       return ROL;
 "cmp"       return CMP;
 "mov"       return MOV;
 "swp"       return SWP;
-"mov"       return MOV;
+"li"        return LI;
 "set"       return SET;
 "clr"       return CLR;
 "sw"        return SW;
