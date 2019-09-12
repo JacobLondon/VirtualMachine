@@ -15,6 +15,7 @@
 ","         return COMMA;
 "#"         return POUND;
 ":"         return COLON;
+"nop"       return NOP;
 "add"       return ADD;
 "sub"       return SUB;
 "mul"       return MUL;

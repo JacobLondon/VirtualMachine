@@ -31,37 +31,47 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | Immediate | opcode(8) - status(8) - suffix(8) - target(8) - immediate(64)
 | Branch | opcode(8) - status(8) - address(64)
 
-| Instruction | Type | Description |
-|-------------|------|-------------|
-| fadd | register | floating point addition
-| add | register | addition
-| fsub | register | floating point subtract
-| sub | register | subtraction
-| fmul | register | floating point multiply
-| mul | register | multiply
-| fdiv | register | floating point divide
-| div | register | divide
-| mod | register | modulus
-| nand | register | logical nand
-| and | register | logical and
-| xnor | register | logical exclusive nor
-| xor | register | logical exclusive or
-| nor | register | logical nor
-| or | register | logical or
-| shr | register | logical shift right
-| shl | register | logical shift left
-| cmp | register | compare and set status register
-| swp | register | swap two registers' data
-| mov | register | move one register's data into another
-| li | immediate | load an integer number into the register
-| lf | immediate | load a floating point number into the register
-| set | immediate | set all the register's bits to 1
-| clr | immediate | clear all the register's bits to 0
-| sw | immediate | store (write) register to data memory
-| lw | immediate | load register (read) from data memory
-| b | jump | branch to the label
-| call | jump | branch to a function and link, used in conjunction with ret
-| ret | jump | return to link at top of link stack if there is something to pop
+| Instruction |    Type    |       Description        |
+|-------------|------------|--------------------------|
+| fadd        | register   | floating point addition
+| add         | register   | addition
+| fsub        | register   | floating point subtract
+| sub         | register   | subtraction
+| fmul        | register   | floating point multiply
+| mul         | register   | multiply
+| fdiv        | register   | floating point divide
+| div         | register   | divide
+| mod         | register   | modulus
+| bnand       | register   | bitwise nand
+| nand        | register   | logical nand
+| band        | register   | bitwise and
+| and         | register   | logical and
+| xnor        | register   | bitwise exclusive nor
+| xor         | register   | bitwise exclusive or
+| bnor        | register   | bitwise nor
+| nor         | register   | logical nor
+| bor         | register   | bitwise or
+| or          | register   | logical or
+| not         | register   | logical not
+| comp        | register   | bitwise complement
+| shr         | register   | logical shift right
+| shl         | register   | logical shift left
+| cmp         | register   | compare and set status register
+| swp         | register   | swap two registers' data
+| movi        | immediate  | move immediate into register
+| movf        | immediate  | move floating point immediate into register
+| mov         | register   | move one register's data into another
+| set         | immediate  | set all the register's bits to 1
+| clr         | immediate  | clear all the register's bits to 0
+| sw          | immediate  | store (write) register to data memory
+| lw          | immediate  | load register (read) from data memory
+| inc         | immediate  | pre increment (++x)
+| dec         | immediate  | pre decrement (--x)
+| push        | immediate  | push target's value onto the stack
+| pop         | immediate  | pop the stack into target
+| b           | jump       | branch to the label
+| call        | jump       | branch to a function and link, used in conjunction with ret
+| ret         | jump       | return to link at top of link stack if there is something to pop
 
 ## [ARM Suffix Reference](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0473c/CEGBHJCJ.html)
 * Allocating unsigned 8-bit integers, so 2^8 suffices possible
