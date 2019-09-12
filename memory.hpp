@@ -1,6 +1,6 @@
 #pragma once
-#include "types.h"
-#include "instruction.h"
+#include "types.hpp"
+#include "instruction.hpp"
 
 class memory {
 public:

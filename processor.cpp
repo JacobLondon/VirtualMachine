@@ -1,4 +1,4 @@
-#include "processor.h"
+#include "processor.hpp"
 
 processor::processor(u64 data_size)
     : data_size(data_size)

@@ -1,6 +1,6 @@
 #pragma once
-#include "types.h"
-#include "memory.h"
+#include "types.hpp"
+#include "memory.hpp"
 
 class processor {
 public:

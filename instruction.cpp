@@ -1,4 +1,4 @@
-#include "instruction.h"
+#include "instruction.hpp"
 
 jtype::jtype(u8 opcode, u8 status, u64 address)
     : opcode(opcode), status(status), address(address)

@@ -1,6 +1,6 @@
 %{
 #include <iostream>
-#include "parser.h"
+#include "parser.hpp"
 %}
 
 %option noyywrap
