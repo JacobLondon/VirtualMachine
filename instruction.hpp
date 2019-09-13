@@ -3,10 +3,14 @@
 
 class instruction {
 public:
-    instruction(u8 opcode, u8 suffix, u64 address);
-    instruction(u8 opcode, u8 suffix, u8 target, u8 register1, s64 immediate);
-    instruction(u8 opcode, u8 suffix, u8 target, u8 register1, f64 immediate);
-    instruction(u8 opcode, bool status, u8 suffix, u8 target, u8 register1, u8 register2);
+    // j type
+    instruction(u16 opcode, u8 suffix, u64 address);
+    // itype
+    instruction(u16 opcode, u8 suffix, u8 target, u8 register1, s64 immediate);
+    instruction(u16 opcode, u8 suffix, u8 target, u8 register1, f64 immediate);
+    // r type
+    instruction(u16 opcode, bool status, u8 suffix, u8 target, u8 register1, u8 register2);
+    
     u8 opcode = 0;
     bool status = false;
     u8 suffix = 0;
