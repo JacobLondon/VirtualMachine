@@ -1,5 +1,6 @@
 %{
 #include <iostream>
+#include <cstdlib>
 #include "parser.hpp"
 %}
 
@@ -59,38 +60,20 @@
 
 "zero"      return ZERO;
 "pc"        return PC;
-"r0"        return R0;
-"r1"        return R1;
-"r2"        return R2;
-"r3"        return R3;
-"r4"        return R4;
-"r5"        return R5;
-"r6"        return R6;
-"r7"        return R7;
-"r8"        return R8;
-"r9"        return R9;
-"r10"       return R10;
-"r11"       return R11;
-"r12"       return R12;
-"r13"       return R13;
-"r14"       return R14;
-"r15"       return R15;
-"r16"       return R16;
-"r17"       return R17;
-"r18"       return R18;
-"r19"       return R19;
-"r20"       return R20;
-"r21"       return R21;
-"r22"       return R22;
-"r23"       return R23;
-"r24"       return R24;
-"r25"       return R25;
-"r26"       return R26;
-"r27"       return R27;
-"r28"       return R28;
-"r29"       return R29;
-"r30"       return R30;
-"r31"       return R31;
+"r"[0-3]?[0-9] { long regNum = atol(&yytext[1]);
+                 if (regNum >= 32) {
+                    std::cerr << "Error - invalid register: " << yytext << std::endl;
+                    return OTHER;
+                 }
+                 return static_cast<ireg>(atol(&yytext[1]));
+               }
+"f"[0-3]?[0-9] { long regNum = atol(&yytext[1]);
+                 if (regNum >= 32) {
+                    std::cerr << "Error - invalid register: " << yytext << std::endl;
+                    return OTHER;
+                 }
+                 return static_cast<freg>(atol(&yytext[1]));
+               }
 
 "s"         return STATUS;
 .           return OTHER;
