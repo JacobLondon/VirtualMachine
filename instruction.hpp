@@ -17,7 +17,7 @@ public:
 template<class T>
 class itype : public instruction {
 public:
-    itype(u8 opcode, u8 suffix, u8 target, T immediate);
+    itype(u8 opcode, u8 suffix, u8 target, u8 register1, T immediate);
     u8 opcode = 0;
     u8 suffix = 0;
     u8 target = 0;

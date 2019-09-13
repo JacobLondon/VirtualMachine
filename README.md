@@ -3,8 +3,8 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 ## Registers
 * 32 64-bit integer registers
   * r0 - r31
-* 16 64-bit floating point registers
-  * f0-f15
+* 32 64-bit floating point registers
+  * f0-f31
 * 2 64-bit special registers
   * zero, pc
 * Flag Register (8-bit)

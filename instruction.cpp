@@ -7,8 +7,8 @@ rtype::rtype(u8 opcode, bool status, u8 suffix, u8 target, u8 register1, u8 regi
 }
 
 template<class T>
-itype<T>::itype(u8 opcode, u8 suffix, u8 target, T immediate)
-    : opcode(opcode), suffix(suffix), target(target), immediate(immediate)
+itype<T>::itype(u8 opcode, u8 suffix, u8 target, u8 register1, T immediate)
+    : opcode(opcode), suffix(suffix), target(target), register1(register1), immediate(immediate)
 {
 
 }
