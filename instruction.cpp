@@ -1,7 +1,7 @@
 #include "instruction.hpp"
 
-instruction::instruction(u16 opcode, u8 suffix, u64 address)
-    : opcode{opcode}, suffix{suffix}, immediate{address}
+instruction::instruction(u16 opcode, u8 suffix, u8 target, u8 register1, u64 immediate)
+    : opcode{opcode}, suffix{suffix}, immediate{immediate}
 {
     status = false;
     target = 0;

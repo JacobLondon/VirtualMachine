@@ -140,7 +140,7 @@ void processor::op_swp(instruction inst)
 
 void processor::op_li(instruction inst)
 {
-    mem.iregfile[inst.target] = inst.immediate;
+    mem.iregfile[inst.target] = inst.immediate.integer;
 }
 
 void processor::op_set(instruction inst)
@@ -155,27 +155,27 @@ void processor::op_clr(instruction inst)
 
 void processor::op_sw(instruction inst)
 {
-    mem.dmem[inst.immediate] = mem.iregfile[inst.target];
+    mem.dmem[inst.immediate.address] = mem.iregfile[inst.target];
 }
 
 void processor::op_lw(instruction inst)
 {
-    mem.iregfile[inst.target] = mem.dmem[inst.immediate];
+    mem.iregfile[inst.target] = mem.dmem[inst.immediate.address];
 }
 
 void processor::op_b(instruction inst)
 {
-    mem.pc = inst.address;
+    mem.pc = inst.immediate.address;
 }
 
 void processor::op_call(instruction inst)
 {
-    mem.stack.push(mem.pc);
-    mem.pc = inst.;
+    mem.call_stack.push(mem.pc);
+    mem.pc = inst.immediate.address;
 }
 
 void processor::op_ret(instruction inst)
 {
-    mem.pc = mem.stack.top();
-    mem.stack.pop();
+    mem.pc = mem.call_stack.top();
+    mem.call_stack.pop();
 }

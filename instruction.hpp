@@ -4,7 +4,7 @@
 class instruction {
 public:
     // j type
-    instruction(u16 opcode, u8 suffix, u64 address);
+    instruction(u16 opcode, u8 suffix, u8 target, u8 register1, u64 immediate);
     // itype
     instruction(u16 opcode, u8 suffix, u8 target, u8 register1, s64 immediate);
     instruction(u16 opcode, u8 suffix, u8 target, u8 register1, f64 immediate);
