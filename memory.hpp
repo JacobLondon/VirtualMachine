@@ -29,6 +29,4 @@ public:
 
     bool suffix(instruction *inst);
     void set_flags(s64 result);
-
-    std::vector<instruction> parse(std::string input);
 };
