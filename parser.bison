@@ -12,13 +12,13 @@ void yyerror(const char* s) { std::cerr << "Error - yyerror << " << s << std::en
 
 // Terminal Symbols
 // Instructions
-%token <token> ADD SUB MUL DIV MOD NAND AND XNOR XOR NOR OR SHR SHL CMP MOV SWP SET CLR SW LW B CALL RET
+%token <token> ADD SUB MUL DIV MOD NAND AND XNOR XOR NOR OR NOT COMP SHR SHL CMP SWP MOV SET CLR SW LW INC DEC PUSH POP B CALL RET
 // Registers
-%token <token> ZERO PC I_REG F_REG
+%token <token> ZERO_REG PC_REG I_REG F_REG
 // Immediates
 %token <token> NUM
 // Symbols
-%token <token> LBRACKET RBRACKET COMMA POUND COLON
+%token <token> LBRACKET RBRACKET COMMA POUND COLON WHITESPACE NEWLINE
 // ARM Suffixes
 %token <token> EQ_SUFFIX NE_SUFFIX CS_SUFFIX HS_SUFFIX CC_SUFFIX LO_SUFFIX MI_SUFFIX PL_SUFFIX VS_SUFFIX HI_SUFFIX LS_SUFFIX GE_SUFFIX GT_SUFFIX LE_SUFFIX AL_SUFFIX STATUS_SUFFIX
 // Custom suffixes and prefixes

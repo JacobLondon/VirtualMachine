@@ -1,3 +1,4 @@
+#include "parser.hpp"
 #include "memory.hpp"
 
 memory::memory(u64 dmem_size)
@@ -44,10 +45,10 @@ bool memory::suffix(instruction inst)
         return !status_n();
     case VS:    // v set
         return status_v();
-    case VS:    // v clear
+    case VC:    // v clear
         return !status_v();
     case HI:    // v set and z clear
-        return status_v() and !status_z();
+        return status_v() && !status_z();
     case LS:    // c clear and z set
         return !status_c() && status_z();
     case GE:    // n == v

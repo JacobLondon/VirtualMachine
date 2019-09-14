@@ -22,7 +22,7 @@ alphanum [a-zA-Z0-9]
 {newline}*          return NEWLINE;
 [1-9]{digit}+       return NUM;
 "0x"{hexdigit}+     return NUM;
-"0"{binarydigit}+   return NUM;
+"0b"{binarydigit}+  return NUM;
 "["                 return LBRACKET;
 "]"                 return RBRACKET;
 ","                 return COMMA;
@@ -73,9 +73,11 @@ alphanum [a-zA-Z0-9]
 "mi"                return MI_SUFFIX;
 "pl"                return PL_SUFFIX;
 "vs"                return VS_SUFFIX;
+"vc"                return VC_SUFFIX;
 "hi"                return HI_SUFFIX;
 "ls"                return LS_SUFFIX;
 "ge"                return GE_SUFFIX;
+"lt"                return LT_SUFFIX;
 "gt"                return GT_SUFFIX;
 "le"                return LE_SUFFIX;
 "al"                return AL_SUFFIX;
