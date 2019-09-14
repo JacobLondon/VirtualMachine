@@ -182,7 +182,7 @@ void processor::op_xnor(instruction inst)
 void processor::op_xor(instruction inst)
 {
     if (inst.floating) {
-        std::cerr << "Error - Invalid operation 'xnor' on " << inst.to_string() << std::endl;
+        std::cerr << "Error - Invalid operation 'xor' on " << inst.to_string() << std::endl;
         exit(-1);
     }
 
@@ -205,7 +205,7 @@ void processor::op_xor(instruction inst)
 void processor::op_nor(instruction inst)
 {
     if (inst.floating) {
-        std::cerr << "Error - Invalid operation 'xnor' on " << inst.to_string() << std::endl;
+        std::cerr << "Error - Invalid operation 'nor' on " << inst.to_string() << std::endl;
         exit(-1);
     }
 
@@ -226,7 +226,7 @@ void processor::op_nor(instruction inst)
 void processor::op_or(instruction inst)
 {
     if (inst.floating) {
-        std::cerr << "Error - Invalid operation 'xnor' on " << inst.to_string() << std::endl;
+        std::cerr << "Error - Invalid operation 'or' on " << inst.to_string() << std::endl;
         exit(-1);
     }
 
@@ -247,7 +247,7 @@ void processor::op_or(instruction inst)
 void processor::op_not(instruction inst)
 {
     if (inst.floating) {
-        std::cerr << "Error - Invalid operation 'xnor' on " << inst.to_string() << std::endl;
+        std::cerr << "Error - Invalid operation 'not' on " << inst.to_string() << std::endl;
         exit(-1);
     }
 
@@ -259,7 +259,7 @@ void processor::op_not(instruction inst)
 void processor::op_comp(instruction inst)
 {
     if (inst.floating) {
-        std::cerr << "Error - Invalid operation 'xnor' on " << inst.to_string() << std::endl;
+        std::cerr << "Error - Invalid operation 'comp' on " << inst.to_string() << std::endl;
         exit(-1);
     }
 
@@ -271,7 +271,7 @@ void processor::op_comp(instruction inst)
 void processor::op_shr(instruction inst)
 {
     if (inst.floating) {
-        std::cerr << "Error - Invalid operation 'xnor' on " << inst.to_string() << std::endl;
+        std::cerr << "Error - Invalid operation 'shr' on " << inst.to_string() << std::endl;
         exit(-1);
     }
 
@@ -286,7 +286,7 @@ void processor::op_shr(instruction inst)
 void processor::op_shl(instruction inst)
 {
     if (inst.floating) {
-        std::cerr << "Error - Invalid operation 'xnor' on " << inst.to_string() << std::endl;
+        std::cerr << "Error - Invalid operation 'shl' on " << inst.to_string() << std::endl;
         exit(-1);
     }
 
