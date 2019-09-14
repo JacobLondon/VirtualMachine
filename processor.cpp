@@ -5,12 +5,17 @@
 processor::processor(u64 data_size)
     : mem(data_size)
 {
-    
+    // pass
 }
 
 void processor::execute(std::vector<instruction> instructions)
 {
+    done = false;
     mem.imem = instructions;
+    for (mem.pc = 0; mem.pc < mem.imem.size(); mem.pc++) {
+        operation(mem.imem[mem.pc++]);
+    }
+    done = true;
 }
 
 /**

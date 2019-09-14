@@ -8,8 +8,8 @@ public:
     processor(u64 data_size);
 
     void execute(std::vector<instruction> instructions);
-
     memory mem;
+    bool done = false;
 
 /**
  * instruction functions
