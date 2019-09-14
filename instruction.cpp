@@ -46,3 +46,8 @@ std::string instruction::to_string()
     }
     return builder;
 }
+
+inline bool instruction::check_flags(u8 flag)
+{
+    return ((flags & flag) | flag)
+}

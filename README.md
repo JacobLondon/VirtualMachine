@@ -50,11 +50,8 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | mul         | r    | f, i        | fmuli, fmul, muli, mul     | multiplication   |
 | div         | r    | f, i        | fdivi, fdiv, divi, div     | division         |
 | mod         | r    | f, i        | fmodi, fmod, modi, mod     | modulus          |
-| nand        | r    | b, i        | bnandi, bnand, nandi, nand | not and          |
 | and         | r    | b, i        | bandi, band, andi, and     | and              |
-| xnor        | r    | b, i        | bxnori, bxnor, xnori, xnor | exclusive nor    |
 | xor         | r    | b, i        | bxori, bxor, xori, xor     | exclusive or     |
-| nor         | r    | b, i        | bnori, bnor, nori, nor     | not or           |
 | or          | r    | b, i        | bori, bor, ori, or         | or               |
 | not         | r    |             | not                        | logical not      |
 | comp        | r    |             | comp                       | one's complement |
