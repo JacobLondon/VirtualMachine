@@ -29,6 +29,6 @@ public:
     inline bool status_z();
     inline bool status_n();
 
-    bool suffix(instruction *inst);
+    bool suffix(instruction inst);
     void set_flags(s64 result);
 };

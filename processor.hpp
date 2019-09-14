@@ -26,14 +26,15 @@ public:
     void op_xor(instruction inst);
     void op_nor(instruction inst);
     void op_or(instruction inst);
+    void op_not(instruction inst);
+    void op_comp(instruction inst);
     void op_shr(instruction inst);
     void op_shl(instruction inst);
-    void op_cmp(instruction inst);    // target doesn't matter
-    void op_mov(instruction inst);    // target doesn't matter
-    void op_swp(instruction inst);    // target doesn't matter
-    void op_li(instruction inst);
-    void op_set(instruction inst);   // immediate doesn't matter
-    void op_clr(instruction inst);   // immediate doesn't matter
+    void op_cmp(instruction inst);
+    void op_swp(instruction inst);
+    void op_mov(instruction inst);
+    void op_set(instruction inst);
+    void op_clr(instruction inst);
     void op_sw(instruction inst);
     void op_lw(instruction inst);
     void op_b(instruction inst);

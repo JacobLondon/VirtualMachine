@@ -29,7 +29,7 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 |------------------|--------|
 | Register  | opcode(16) - status(8) - suffix(8) - target(8) - register1(8) - register2(8)
 | Immediate | opcode(16) - suffix(8) - target(8) - register(8) - immediate(64)
-| Branch    | opcode(16) - suffix(8) - target(8) - register(8) - immediate(64)
+| Jump      | opcode(16) - suffix(8) - target(8) - register(8) - immediate(64)
 
 | Letter | Fix  | Description |
 |--------|------|-------------|
@@ -49,7 +49,7 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | sub         | r    | f, i        | fsubi, fsub, subi, sub     | subtraction      |
 | mul         | r    | f, i        | fmuli, fmul, muli, mul     | multiplication   |
 | div         | r    | f, i        | fdivi, fdiv, divi, div     | division         |
-| mod         | r    | i           | modi, mod                  | modulus          |
+| mod         | r    | f, i        | fmodi, fmod, modi, mod     | modulus          |
 | nand        | r    | b, i        | bnandi, bnand, nandi, nand | not and          |
 | and         | r    | b, i        | bandi, band, andi, and     | and              |
 | xnor        | r    | b, i        | bxnori, bxnor, xnori, xnor | exclusive nor    |
@@ -69,7 +69,7 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | lw          | i    |             | lw                         | load register from data memory |
 | inc         | i    |             | inc                        | pre increment |
 | dec         | i    |             | dec                        | pre decrement |
-| push        | r    | i           | push, pushi                | push register or immediate to data stack |
+| push        | i    |             | push                       | push register or immediate to data stack |
 | pop         | r    |             | pop                        | pop data stack into register |
 | b           | j    |             | b                          | branch to a register's value + immediate offset
 | call        | j    |             | call                       | branch to a function and link, used with ret |
