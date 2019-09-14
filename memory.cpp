@@ -25,9 +25,9 @@ inline bool memory::status_n()
     return flags & NFLAG;
 }
 
-bool memory::suffix(instruction *inst)
+bool memory::suffix(instruction inst)
 {
-    switch(inst->status) {
+    switch(inst.status) {
     case EQ:    // z set
         return status_z();
     case NE:    // z clear
@@ -61,7 +61,7 @@ bool memory::suffix(instruction *inst)
     case AL:    // always, auto added if user didn't
         return true;
     default:
-        std::cerr << "Error - Unexpected status: " << inst->status << std::endl;
+        std::cerr << "Error - Unexpected status: " << inst.status << std::endl;
         exit(-1);
     }
     return false;

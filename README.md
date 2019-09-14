@@ -25,53 +25,55 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 ## Instructions
 * 256 possible instructions, 2^8
 
-| Inst Type | Format |
-|-----------|--------|
-| Register | opcode(8) - status(8) - suffix(8) - target(8) - register1(8) - register2(8)
-| Immediate | opcode(8) - status(8) - suffix(8) - target(8) - immediate(64)
-| Branch | opcode(8) - status(8) - address(64)
+| Instruction Type | Format |
+|------------------|--------|
+| Register  | opcode(16) - status(8) - suffix(8) - target(8) - register1(8) - register2(8)
+| Immediate | opcode(16) - suffix(8) - target(8) - register(8) - immediate(64)
+| Jump      | opcode(16) - suffix(8) - target(8) - register(8) - immediate(64)
 
-| Instruction |    Type    |       Description        |
-|-------------|------------|--------------------------|
-| fadd        | register   | floating point addition
-| add         | register   | addition
-| fsub        | register   | floating point subtract
-| sub         | register   | subtraction
-| fmul        | register   | floating point multiply
-| mul         | register   | multiply
-| fdiv        | register   | floating point divide
-| div         | register   | divide
-| mod         | register   | modulus
-| bnand       | register   | bitwise nand
-| nand        | register   | logical nand
-| band        | register   | bitwise and
-| and         | register   | logical and
-| xnor        | register   | bitwise exclusive nor
-| xor         | register   | bitwise exclusive or
-| bnor        | register   | bitwise nor
-| nor         | register   | logical nor
-| bor         | register   | bitwise or
-| or          | register   | logical or
-| not         | register   | logical not
-| comp        | register   | bitwise complement
-| shr         | register   | logical shift right
-| shl         | register   | logical shift left
-| cmp         | register   | compare and set status register
-| swp         | register   | swap two registers' data
-| movi        | immediate  | move immediate into register
-| movf        | immediate  | move floating point immediate into register
-| mov         | register   | move one register's data into another
-| set         | immediate  | set all the register's bits to 1
-| clr         | immediate  | clear all the register's bits to 0
-| sw          | immediate  | store (write) register to data memory
-| lw          | immediate  | load register (read) from data memory
-| inc         | immediate  | pre increment (++x)
-| dec         | immediate  | pre decrement (--x)
-| push        | immediate  | push target's value onto the stack
-| pop         | immediate  | pop the stack into target
-| b           | jump       | branch to the label
-| call        | jump       | branch to a function and link, used in conjunction with ret
-| ret         | jump       | return to link at top of link stack if there is something to pop
+| Letter | Fix  | Description |
+|--------|------|-------------|
+| f      | Pre  | floating point operation (rather than integer)
+| b      | Pre  | bitwise operation (rather than logical)
+| i      | Post | immediate operation (rather than register)
+
+| Operation Type   | Example |     Immediate Usage      |
+|------------------|---------|--------------------------|
+| register         | add     | op target reg1 reg2      |
+| immediate        | addi    | op target reg1 immediate |
+| jump             | b       | op (register) address (label / offset) |
+
+| Instruction | Type | Valid Fixes |          Uses              |  Description     |
+|-------------|------|-------------|----------------------------|------------------|
+| add         | r    | f, i        | faddi, fadd, addi, add     | addition         |
+| sub         | r    | f, i        | fsubi, fsub, subi, sub     | subtraction      |
+| mul         | r    | f, i        | fmuli, fmul, muli, mul     | multiplication   |
+| div         | r    | f, i        | fdivi, fdiv, divi, div     | division         |
+| mod         | r    | f, i        | fmodi, fmod, modi, mod     | modulus          |
+| nand        | r    | b, i        | bnandi, bnand, nandi, nand | not and          |
+| and         | r    | b, i        | bandi, band, andi, and     | and              |
+| xnor        | r    | b, i        | bxnori, bxnor, xnori, xnor | exclusive nor    |
+| xor         | r    | b, i        | bxori, bxor, xori, xor     | exclusive or     |
+| nor         | r    | b, i        | bnori, bnor, nori, nor     | not or           |
+| or          | r    | b, i        | bori, bor, ori, or         | or               |
+| not         | r    |             | not                        | logical not      |
+| comp        | r    |             | comp                       | one's complement |
+| shr         | r    | i           | shri, shr                  | shift right      |
+| shl         | r    | i           | shli, shl                  | shift left       |
+| cmp         | r    | f, i        | fcmpi, fcmp, cmpi, cmp     | compare and set status register |
+| swp         | r    | f           | fswp, swp                  | swap two registers' data |
+| mov         | r    | f, i        | fmovi, fmov, movi, mov     | move data into target |
+| set         | r    | f           | fset, set                  | set the register to max value |
+| clr         | r    | f           | fclr, clr                  | clear the register to zero |
+| sw          | i    |             | sw                         | store register to data memory |
+| lw          | i    |             | lw                         | load register from data memory |
+| inc         | i    |             | inc                        | pre increment |
+| dec         | i    |             | dec                        | pre decrement |
+| push        | i    |             | push                       | push register or immediate to data stack |
+| pop         | r    |             | pop                        | pop data stack into register |
+| b           | j    |             | b                          | branch to a register's value + immediate offset
+| call        | j    |             | call                       | branch to a function and link, used with ret |
+| ret         | j    |             | ret                        | return to link at top of link stack |
 
 ## [ARM Suffix Reference](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0473c/CEGBHJCJ.html)
 * Allocating unsigned 8-bit integers, so 2^8 suffices possible

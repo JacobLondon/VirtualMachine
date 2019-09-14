@@ -17,8 +17,10 @@ public:
     std::vector<s64> iregfile;
     std::vector<f64> fregfile;
     std::vector<instruction> imem;
-    std::vector<u64> dmem;
-    std::stack<u64> stack;
+    std::vector<s64> dmem;
+
+    std::stack<s64> data_stack;
+    std::stack<u64> call_stack;
     std::unordered_map<std::string, u64> labels;
 
     // get flags
@@ -27,6 +29,6 @@ public:
     inline bool status_z();
     inline bool status_n();
 
-    bool suffix(instruction *inst);
+    bool suffix(instruction inst);
     void set_flags(s64 result);
 };
