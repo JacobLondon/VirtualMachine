@@ -36,7 +36,6 @@ enum class ireg {
     R19 = 19,
     R20 = 20,
     R21 = 21,
-    R21 = 21,
     R22 = 22,
     R23 = 23,
     R24 = 24,
@@ -49,7 +48,7 @@ enum class ireg {
     R31 = 31,
 };
 
-enum class ireg {
+enum class freg {
     F0 = 0,
     F1 = 1,
     F2 = 2,

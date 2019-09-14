@@ -39,7 +39,6 @@ void processor::operation(instruction inst)
     case MOV:  op_mov(inst);  break;
     case SWP:  op_swp(inst);  break;
     // i type
-    case LI:  op_li(inst);  break;
     case SET: op_set(inst); break;
     case CLR: op_clr(inst); break;
     case SW:  op_sw(inst);  break;

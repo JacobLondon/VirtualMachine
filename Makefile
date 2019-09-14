@@ -5,14 +5,15 @@ TARGET=VirtualMachine
 
 .PHONY: clean
 CXXFLAGS=-std=c++17
+YACCFLAGS=-d
 
-$(TARGET) : $(OBJ_FILES)
+$(TARGET) : $(YACC_FILES) $(LEX_FILES) $(OBJ_FILES)
 	$(CXX) -o $(TARGET) $(OBJ_FILES)
 
-%.cpp : %.lpp
+%.cpp : %.flex
 	$(LEX) $(LEXFLAGS) -o $@ $< 
 
-%.cpp : %.ypp
+%.cpp : %.bison
 	$(YACC) $(YACCFLAGS) -o $@ $<
 
 clean : 
