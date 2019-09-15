@@ -3,10 +3,10 @@
 #include "memory.hpp"
 
 enum RegisterFlags {
-    NONE = 0x00,
-    BIT = 0x01,
-    FLOAT = 0x02,
-    IMM = 0x04,
+    BITF = 0x01,
+    FLOATF = 0x02,
+    //INTF = 0x04,
+    IMMF = 0x08,
 };
 
 class RegisterRef {
@@ -14,6 +14,7 @@ public:
     RegisterRef(u8 address, u8 flags) : address{address}, flags{flags} {}
     u8 address;
     u8 flags;
+    inline bool check_flags(u8 flag) { return ((flags & flag) | flag); }
 };
 
 class Instruction {
@@ -22,7 +23,7 @@ public:
     Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, s64 immediate);
     Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, f64 immediate);
     std::string to_string();
-    inline bool check_flags(u8 flag);
+    inline bool check_flags(u8 flag) { return ((flags & flag) | flag); }
     bool check_suffix(Memory &memory);
     void execute(Memory& memory);
 
@@ -40,10 +41,6 @@ public:
         s64 integer;
         f64 floating;
     } immediate;
-    
-    inline void set_target(s64 value, Memory& mem);
-    inline void set_target(f64 value, Memory& mem);
-    inline void set_target(bool value, Memory& mem);
 
     inline void op_add(Memory& mem);
     inline void op_sub(Memory& mem);
@@ -72,22 +69,19 @@ public:
     inline void op_ret(Memory& mem);
 };
 
-#define REG_TARGET(instruction, memory) \
-    (instruction->check_flags(FLOAT) \
-    ? memory.fregfile[instruction->target.address] \
-    : memory.iregfile[instruction->target.address])
-
-#define REG_1(instruction, memory) \
-    (instruction->check_flags(FLOAT) \
-    ? memory.fregfile[instruction->register1.address] \
-    : memory.iregfile[instruction->register1.address])
-
-#define REG_2(instruction, memory) \
-    (instruction->check_flags(FLOAT) \
-    ? memory.fregfile[instruction->register2.address] \
-    : memory.iregfile[instruction->register2.address])
-
 #define IMMEDIATE(instruction) \
-    (instruction->check_flags(FLOAT) \
+    (instruction->check_flags(FLOATF) \
     ? instruction->immediate.floating \
     : instruction->immediate.integer)
+
+#define REG_SET(reg, mem, value) do { \
+    if (reg.check_flags(FLOATF)) \
+        mem.fregfile[reg.address] = value; \
+    else \
+        mem.iregfile[reg.address] = value; \
+} while (0)
+
+#define REG_AT(reg, mem) \
+    (reg.check_flags(FLOATF) \
+    ? mem.fregfile[reg.address] \
+    : mem.iregfile[reg.address])

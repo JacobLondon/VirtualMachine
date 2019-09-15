@@ -1,3 +1,4 @@
+#include <limits>
 #include "instruction.hpp"
 
 Instruction::Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, s64 immediate)
@@ -20,9 +21,9 @@ std::string Instruction::to_string()
     builder += "target: " + std::to_string(target.address) + "\n";
     builder += "register1: " + std::to_string(register1.address) + "\n";
     builder += "register2: " + std::to_string(register2.address) + "\n";
-    if (check_flags(IMM)) {
+    if (check_flags(IMMF)) {
         builder += "Immediate: ";
-        if (check_flags(FLOAT))
+        if (check_flags(FLOATF))
             builder += std::to_string(immediate.floating);
         else
             builder += std::to_string(immediate.integer);
@@ -30,84 +31,84 @@ std::string Instruction::to_string()
     return builder;
 }
 
-inline bool Instruction::check_flags(u8 flag)
+void Instruction::execute(Memory& mem)
 {
-    return ((flags & flag) | flag);
-}
-
-void Instruction::execute(Memory& memory)
-{
-    if (!check_suffix(memory))
+    if (!check_suffix(mem))
         return;
 
     switch (opcode) {
     // r type
-    case ADD:  op_add(memory);  break;
-    case SUB:  op_sub(memory);  break;
-    case MUL:  op_mul(memory);  break;
-    case DIV:  op_div(memory);  break;
-    case MOD:  op_mod(memory);  break;
-    case AND:  op_and(memory);  break;
-    case XOR:  op_xor(memory);  break;
-    case OR:   op_or(memory);   break;
-    case NOT:  op_not(memory);  break;
-    case COMP: op_comp(memory); break;
-    case SHR:  op_shr(memory);  break;
-    case SHL:  op_shl(memory);  break;
-    case CMP:  op_cmp(memory);  break;
-    case SWP:  op_swp(memory);  break;
-    case MOV:  op_mov(memory);  break;
+    case ADD:  op_add(mem);  break;
+    case SUB:  op_sub(mem);  break;
+    case MUL:  op_mul(mem);  break;
+    case DIV:  op_div(mem);  break;
+    case MOD:  op_mod(mem);  break;
+    case AND:  op_and(mem);  break;
+    case XOR:  op_xor(mem);  break;
+    case OR:   op_or(mem);   break;
+    case NOT:  op_not(mem);  break;
+    case COMP: op_comp(mem); break;
+    case SHR:  op_shr(mem);  break;
+    case SHL:  op_shl(mem);  break;
+    case CMP:  op_cmp(mem);  break;
+    case SWP:  op_swp(mem);  break;
+    case MOV:  op_mov(mem);  break;
     // i type
-    case SET:  op_set(memory);  break;
-    case CLR:  op_clr(memory);  break;
-    case SW:   op_sw(memory);   break;
-    case LW:   op_lw(memory);   break;
+    case SET:  op_set(mem);  break;
+    case CLR:  op_clr(mem);  break;
+    case SW:   op_sw(mem);   break;
+    case LW:   op_lw(mem);   break;
     // j type
-    case B:    op_b(memory);    break;
-    case CALL: op_call(memory); break;
-    case RET:  op_ret(memory);  break;
+    case B:    op_b(mem);    break;
+    case CALL: op_call(mem); break;
+    case RET:  op_ret(mem);  break;
     default:
         std::cerr << "Error - Unexpected opcode: " << opcode << std::endl;
         exit(-1);
     }
 
-    if (status)
-        memory.set_flags(REG_1(this, memory) - REG_2(this, memory));
+    if (!status)
+        return;
+
+    if (check_flags(IMMF))
+        mem.set_flags(REG_AT(register1, mem) - IMMEDIATE(this));
+    else
+        mem.set_flags(REG_AT(register1, mem) - REG_AT(register2, mem));
 }
 
-bool Instruction::check_suffix(Memory& memory)
+bool Instruction::check_suffix(Memory& mem)
 {
     switch(status) {
     case EQ:    // z set
-        return memory.status_z();
+        return mem.status_z();
     case NE:    // z clear
-        return !memory.status_z();
+        return !mem.status_z();
     case CS:    // c set
     case HS:
-        return memory.status_c();
+        return mem.status_c();
     case CC:    // c clear
     case LO:
-        return !memory.status_c();
+        return !mem.status_c();
     case MI:    // n set
-        return memory.status_n();
+        return mem.status_n();
     case PL:    // n clear
-        return !memory.status_n();
+        return !mem.status_n();
     case VS:    // v set
-        return memory.status_v();
+        return mem.status_v();
     case VC:    // v clear
-        return !memory.status_v();
+        return !mem.status_v();
     case HI:    // v set and z clear
-        return memory.status_v() && !memory.status_z();
+        return mem.status_v() && !mem.status_z();
     case LS:    // c clear and z set
-        return !memory.status_c() && memory.status_z();
+        return !mem.status_c() && mem.status_z();
     case GE:    // n == v
-        return memory.status_n() == memory.status_v();
+        return mem.status_n() == mem.status_v();
     case LT:    // n != v
-        return memory.status_n() != memory.status_v();
+        return mem.status_n() != mem.status_v();
     case GT:    // z clear, n == v
-        return !memory.status_z() && (memory.status_n() == memory.status_v());
+        return !mem.status_z() && (mem.status_n() == mem.status_v());
     case LE:    // z set, n != v
-        return memory.status_z() && (memory.status_n() != memory.status_v());
+        return mem.status_z() && (mem.status_n() != mem.status_v());
     case AL:    // always, auto added if user didn't
         return true;
     default:
@@ -117,106 +118,91 @@ bool Instruction::check_suffix(Memory& memory)
     return false;
 }
 
-inline void Instruction::set_target(s64 value, Memory& mem)
-{
-    mem.iregfile[target.address] = value;
-}
-
-inline void Instruction::set_target(f64 value, Memory& mem)
-{
-    mem.fregfile[target.address] = value;
-}
-
-inline void Instruction::set_target(bool value, Memory& mem)
-{
-    mem.fregfile[target.address] = value;
-}
-
 inline void Instruction::op_add(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target(REG_1(this, mem) + IMMEDIATE(this), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, REG_AT(register1, mem) + IMMEDIATE(this));
     else
-        set_target(REG_1(this, mem) + REG_2(this, mem), mem);
+        REG_SET(target, mem, REG_AT(register1, mem) + REG_AT(register2, mem));
 }
 inline void Instruction::op_sub(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target(REG_1(this, mem) - IMMEDIATE(this), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, REG_AT(register1, mem) - IMMEDIATE(this));
     else
-        set_target(REG_1(this, mem) - REG_2(this, mem), mem);
+        REG_SET(target, mem, REG_AT(register1, mem) - REG_AT(register2, mem));
 }
 inline void Instruction::op_mul(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target(REG_1(this, mem) * IMMEDIATE(this), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, REG_AT(register1, mem) * IMMEDIATE(this));
     else
-        set_target(REG_1(this, mem) * REG_2(this, mem), mem);
+        REG_SET(target, mem, REG_AT(register1, mem) * REG_AT(register2, mem));
 }
 inline void Instruction::op_div(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target(REG_1(this, mem) / IMMEDIATE(this), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, REG_AT(register1, mem) / IMMEDIATE(this));
     else
-        set_target(REG_1(this, mem) / REG_2(this, mem), mem);
+        REG_SET(target, mem, REG_AT(register1, mem) / REG_AT(register2, mem));
 }
 inline void Instruction::op_mod(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target(fmod(REG_1(this, mem), IMMEDIATE(this)), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, fmod(REG_AT(register1, mem), IMMEDIATE(this)));
     else
-        set_target(fmod(REG_1(this, mem), REG_2(this, mem)), mem);
+        REG_SET(target, mem, fmod(REG_AT(register1, mem), REG_AT(register2, mem)));
 }
 inline void Instruction::op_and(Memory& mem)
 {
-    if (check_flags(IMM | BIT))
-        set_target((s64)REG_1(this, mem) & (s64)IMMEDIATE(this), mem);
-    else if (check_flags(BIT))
-        set_target((s64)REG_1(this, mem) & (s64)REG_2(this, mem), mem);
-    if (check_flags(IMM))
-        this->set_target(REG_1(this, mem) && IMMEDIATE(this), mem);
+    if (check_flags(IMMF | BITF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) & (s64)IMMEDIATE(this));
+    else if (check_flags(BITF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) & (s64)REG_AT(register2, mem));
+    else if (check_flags(IMMF))
+        REG_SET(target, mem, REG_AT(register1, mem) && IMMEDIATE(this));
     else
-        set_target(REG_1(this, mem) && REG_2(this, mem), mem);
+        REG_SET(target, mem, REG_AT(register1, mem) && REG_AT(register2, mem));
 }
 inline void Instruction::op_xor(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target((s64)REG_1(this, mem) ^ (s64)IMMEDIATE(this), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) ^ (s64)IMMEDIATE(this));
     else
-        set_target((s64)REG_1(this, mem) ^ (s64)REG_2(this, mem), mem);
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) ^ (s64)REG_AT(register2, mem));
 }
 inline void Instruction::op_or(Memory& mem)
 {
-    if (check_flags(IMM | BIT))
-        set_target((s64)REG_1(this, mem) | (s64)IMMEDIATE(this), mem);
-    else if (check_flags(BIT))
-        set_target((s64)REG_1(this, mem) | (s64)REG_2(this, mem), mem);
-    if (check_flags(IMM))
-        this->set_target(REG_1(this, mem) || IMMEDIATE(this), mem);
+    if (check_flags(IMMF | BITF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) | (s64)IMMEDIATE(this));
+    else if (check_flags(BITF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) | (s64)REG_AT(register2, mem));
+    else if (check_flags(IMMF))
+        REG_SET(target, mem, REG_AT(register1, mem) || IMMEDIATE(this));
     else
-        set_target(REG_1(this, mem) || REG_2(this, mem), mem);
+        REG_SET(target, mem, REG_AT(register1, mem) || REG_AT(register2, mem));
 }
 inline void Instruction::op_not(Memory& mem)
 {
-    set_target(!REG_1(this, mem), mem);
+    REG_SET(target, mem, !REG_AT(register1, mem));
 }
 inline void Instruction::op_comp(Memory& mem)
 {
-    set_target(~(s64)REG_1(this, mem), mem);
+    REG_SET(target, mem, ~(s64)REG_AT(register1, mem));
 }
 inline void Instruction::op_shr(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target((s64)REG_1(this, mem) >> (s64)IMMEDIATE(this), mem);
-    else
-        set_target((s64)REG_1(this, mem) >> (s64)REG_2(this, mem), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) >> (s64)IMMEDIATE(this));
+    else if (check_flags(BITF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) >> (s64)REG_AT(register2, mem));
 }
 inline void Instruction::op_shl(Memory& mem)
 {
-    if (check_flags(IMM))
-        set_target((s64)REG_1(this, mem) << (s64)IMMEDIATE(this), mem);
-    else
-        set_target((s64)REG_1(this, mem) << (s64)REG_2(this, mem), mem);
+    if (check_flags(IMMF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) << (s64)IMMEDIATE(this));
+    else if (check_flags(BITF))
+        REG_SET(target, mem, (s64)REG_AT(register1, mem) << (s64)REG_AT(register2, mem));
 }
 inline void Instruction::op_cmp(Memory& mem)
 {
@@ -224,15 +210,53 @@ inline void Instruction::op_cmp(Memory& mem)
 }
 inline void Instruction::op_swp(Memory& mem)
 {
-    if (target.flags == FLOAT && register1.flags == FLOAT)
-    // TODO
-    std::swap(REG_TARGET(this, mem), REG_1(this, mem));
+    f64 temp = REG_AT(target, mem);
+    REG_SET(target, mem, REG_AT(register1, mem));
+    REG_SET(register1, mem, REG_AT(target, mem));
 }
-inline void Instruction::op_mov(Memory& mem);
-inline void Instruction::op_set(Memory& mem);
-inline void Instruction::op_clr(Memory& mem);
-inline void Instruction::op_sw(Memory& mem);
-inline void Instruction::op_lw(Memory& mem);
-inline void Instruction::op_b(Memory& mem);
-inline void Instruction::op_call(Memory& mem);
-inline void Instruction::op_ret(Memory& mem);
+inline void Instruction::op_mov(Memory& mem)
+{
+    if (check_flags(IMMF))
+        REG_SET(target, mem, IMMEDIATE(this));
+    else
+        REG_SET(target, mem, REG_AT(register1, mem));
+}
+inline void Instruction::op_set(Memory& mem)
+{
+    if (target.check_flags(FLOATF))
+        mem.fregfile[target.address] = std::numeric_limits<f64>::max();
+    else
+        mem.iregfile[target.address] = std::numeric_limits<s64>::max();
+}
+inline void Instruction::op_clr(Memory& mem)
+{
+    REG_SET(target, mem, 0);
+}
+inline void Instruction::op_sw(Memory& mem)
+{
+    if (target.check_flags(FLOATF))
+        mem.dmem[IMMEDIATE(this)] = reinterpret_cast<s64&>(mem.fregfile[target.address]);
+    else
+        mem.dmem[IMMEDIATE(this)] = mem.fregfile[target.address];
+}
+inline void Instruction::op_lw(Memory& mem)
+{
+    if (target.check_flags(FLOATF))
+        mem.fregfile[target.address] = reinterpret_cast<f64&>(mem.dmem[IMMEDIATE(this)]);
+    else
+        mem.iregfile[target.address] = mem.dmem[IMMEDIATE(this)];
+}
+inline void Instruction::op_b(Memory& mem)
+{
+    mem.pc = (s64)(REG_AT(target, mem) + IMMEDIATE(this));
+}
+inline void Instruction::op_call(Memory& mem)
+{
+    mem.call_stack.push(mem.pc);
+    mem.pc = (s64)(REG_AT(target, mem) + IMMEDIATE(this));
+}
+inline void Instruction::op_ret(Memory& mem)
+{
+    mem.pc = mem.call_stack.top();
+    mem.call_stack.pop();
+}
