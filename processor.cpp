@@ -8,10 +8,10 @@ processor::processor(u64 data_size)
     // pass
 }
 
-void processor::execute(std::vector<instruction> instructions)
+void processor::execute(std::vector<Instruction> Instructions)
 {
     done = false;
-    mem.imem = instructions;
+    mem.imem = Instructions;
     for (mem.pc = 0; mem.pc < mem.imem.size(); mem.pc++) {
         operation(mem.imem[mem.pc]);
     }
@@ -19,10 +19,10 @@ void processor::execute(std::vector<instruction> instructions)
 }
 
 /**
- * instruction functions
+ * Instruction functions
  */
 
-void processor::operation(instruction inst)
+void processor::operation(Instruction inst)
 {
     if (!mem.suffix(inst))
         return;
@@ -92,6 +92,14 @@ void processor::operation(instruction inst)
         exit(-1); \
     } else
 
+static inline void check_float(Instruction& inst, std::string message)
+{
+    if (inst.check_flags(inst.FLOAT)) {
+        std::cerr << "Error - Invalid operation '" << message << "' on " << inst.to_string() << std::endl;
+        exit(-1);
+    }
+}
+
 #define LOGBIT_OP(op, message) \
     FLOAT_CHK(message); \
     if (inst.check_flags(inst.BIT | inst.IMM)) \
@@ -110,27 +118,27 @@ void processor::operation(instruction inst)
     else \
         mem.iregfile[inst.target] = mem.iregfile[inst.register1] op mem.iregfile[inst.register2]
 
-void processor::op_add(instruction inst)
+void processor::op_add(Instruction inst)
 {
     MATH_OP(+);
 }
 
-void processor::op_sub(instruction inst)
+void processor::op_sub(Instruction inst)
 {
     MATH_OP(-);
 }
 
-void processor::op_mul(instruction inst)
+void processor::op_mul(Instruction inst)
 {
     MATH_OP(*);
 }
 
-void processor::op_div(instruction inst)
+void processor::op_div(Instruction inst)
 {
     MATH_OP(/);
 }
 
-void processor::op_mod(instruction inst)
+void processor::op_mod(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT | inst.IMM))
         mem.fregfile[inst.target] = fmod(mem.fregfile[inst.register1], mem.fregfile[inst.register2]);
@@ -139,22 +147,22 @@ void processor::op_mod(instruction inst)
     MATH_IOP(%);
 }
 
-void processor::op_and(instruction inst)
+void processor::op_and(Instruction inst)
 {
     LOGBIT_OP(&, "and");
 }
 
-void processor::op_xor(instruction inst)
+void processor::op_xor(Instruction inst)
 {
     BIT_OP(^, "xor");
 }
 
-void processor::op_or(instruction inst)
+void processor::op_or(Instruction inst)
 {
     LOGBIT_OP(|, "or");
 }
 
-void processor::op_not(instruction inst)
+void processor::op_not(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT))
         mem.fregfile[inst.target] = !mem.fregfile[inst.register1];
@@ -162,24 +170,24 @@ void processor::op_not(instruction inst)
         mem.iregfile[inst.target] = !mem.iregfile[inst.register1];
 }
 
-void processor::op_comp(instruction inst)
+void processor::op_comp(Instruction inst)
 {
     FLOAT_CHK("comp")
 
     mem.iregfile[inst.target] = ~mem.iregfile[inst.register1];
 }
 
-void processor::op_shr(instruction inst)
+void processor::op_shr(Instruction inst)
 {
     BIT_OP(>>, "shr");
 }
 
-void processor::op_shl(instruction inst)
+void processor::op_shl(Instruction inst)
 {
     BIT_OP(<<, "shl");
 }
 
-void processor::op_cmp(instruction inst)
+void processor::op_cmp(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT))
         mem.set_flags(mem.fregfile[inst.register1] - mem.fregfile[inst.register2]);
@@ -187,7 +195,7 @@ void processor::op_cmp(instruction inst)
         mem.set_flags(mem.iregfile[inst.register1] - mem.iregfile[inst.register2]);
 }
 
-void processor::op_swp(instruction inst)
+void processor::op_swp(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT))
         std::swap(mem.fregfile[inst.register1], mem.fregfile[inst.register2]);
@@ -195,7 +203,7 @@ void processor::op_swp(instruction inst)
         std::swap(mem.iregfile[inst.register1], mem.iregfile[inst.register2]);
 }
 
-void processor::op_mov(instruction inst)
+void processor::op_mov(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT | inst.IMM))
         mem.fregfile[inst.register1] = inst.immediate.floating;
@@ -207,7 +215,7 @@ void processor::op_mov(instruction inst)
         mem.iregfile[inst.register1] = mem.iregfile[inst.register2];
 }
 
-void processor::op_set(instruction inst)
+void processor::op_set(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT))
         mem.fregfile[inst.target] = std::numeric_limits<f64>::max();
@@ -215,7 +223,7 @@ void processor::op_set(instruction inst)
         mem.iregfile[inst.target] = std::numeric_limits<s64>::max();
 }
 
-void processor::op_clr(instruction inst)
+void processor::op_clr(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT))
         mem.fregfile[inst.target] = 0;
@@ -223,12 +231,12 @@ void processor::op_clr(instruction inst)
         mem.iregfile[inst.target] = 0;
 }
 
-void processor::op_sw(instruction inst)
+void processor::op_sw(Instruction inst)
 {
     mem.dmem[inst.immediate.address] = reinterpret_cast<s64&>(mem.iregfile[inst.target]);
 }
 
-void processor::op_lw(instruction inst)
+void processor::op_lw(Instruction inst)
 {
     if (inst.check_flags(inst.FLOAT))
         mem.fregfile[inst.target] = reinterpret_cast<f64&>(mem.dmem[inst.immediate.address]);
@@ -236,18 +244,18 @@ void processor::op_lw(instruction inst)
         mem.iregfile[inst.target] = mem.dmem[inst.immediate.address];
 }
 
-void processor::op_b(instruction inst)
+void processor::op_b(Instruction inst)
 {
     mem.pc = mem.iregfile[inst.register1] + inst.immediate.address;
 }
 
-void processor::op_call(instruction inst)
+void processor::op_call(Instruction inst)
 {
     mem.call_stack.push(mem.pc);
     mem.pc = mem.iregfile[inst.register1] + inst.immediate.address;
 }
 
-void processor::op_ret(instruction inst)
+void processor::op_ret(Instruction inst)
 {
     mem.pc = mem.call_stack.top();
     mem.call_stack.pop();
