@@ -3,10 +3,10 @@
 #include "instruction.hpp"
 
 enum MemoryFlags {
-    VFLAG = 0x1,
-    CFLAG = 0x2,
-    ZFLAG = 0x4,
-    NFLAG = 0x8,
+    V_FLAG = 0x1,
+    C_FLAG = 0x2,
+    Z_FLAG = 0x4,
+    N_FLAG = 0x8,
 };
 
 class Memory {
@@ -31,6 +31,23 @@ public:
     inline bool status_z();
     inline bool status_n();
 
-    void set_flags(f64 result);
-    void set_flags(s64 result);
 };
+
+#define MEM_SET_FLAGS(mem, target, check1, check2) do { \
+    mem.flags = 0; \
+    /* overflow */ \
+    if ((check1 > 0) && (check1 > REG_MAX(target) - check2)) \
+        mem.flags |= V_FLAG; \
+    /* underflow */ \
+    if ((check1 < 0) && (check1 < REG_MIN(target) - check2)) \
+        mem.flags |= V_FLAG; \
+    /* carry */ \
+    if ((check1 - check2) < 0) \
+        mem.flags |= C_FLAG; \
+    /* zero */ \
+    if (check1 - check2 == 0) \
+        mem.flags |= Z_FLAG; \
+    /* negative */ \
+    if (check1 - check2 < 0) \
+        mem.flags |= N_FLAG; \
+} while (0)

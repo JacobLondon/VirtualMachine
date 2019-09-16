@@ -51,17 +51,17 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | div         | r    | f, i        | fdivi, fdiv, divi, div     | division         |
 | mod         | r    | f, i        | fmodi, fmod, modi, mod     | modulus          |
 | and         | r    | b, i        | bandi, band, andi, and     | and              |
-| xor         | r    | b, i        | bxori, bxor, xori, xor     | exclusive or     |
+| xor         | r    | i           | xori, xor                  | exclusive or     |
 | or          | r    | b, i        | bori, bor, ori, or         | or               |
 | not         | r    |             | not                        | logical not      |
 | comp        | r    |             | comp                       | one's complement |
 | shr         | r    | i           | shri, shr                  | shift right      |
 | shl         | r    | i           | shli, shl                  | shift left       |
-| cmp         | r    | f, i        | fcmpi, fcmp, cmpi, cmp     | compare and set status register |
-| swp         | r    | f           | fswp, swp                  | swap two registers' data |
-| mov         | r    | f, i        | fmovi, fmov, movi, mov     | move data into target |
-| set         | r    | f           | fset, set                  | set the register to max value |
-| clr         | r    | f           | fclr, clr                  | clear the register to zero |
+| cmp         | r    | i           | cmpi, cmp                  | compare and set status register |
+| swp         | r    |             | swp                        | swap two registers' data |
+| mov         | r    | i           | movi, mov                  | move data into target |
+| set         | r    |             | set                        | set the register to max value |
+| clr         | r    |             | clr                        | clear the register to zero |
 | sw          | i    |             | sw                         | store register to data memory |
 | lw          | i    |             | lw                         | load register from data memory |
 | inc         | i    |             | inc                        | pre increment |

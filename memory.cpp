@@ -1,4 +1,5 @@
-#include "parser.hpp"
+//#include "parser.hpp"
+#include <limits>
 #include "memory.hpp"
 
 Memory::Memory(u64 dmem_size)
@@ -6,32 +7,22 @@ Memory::Memory(u64 dmem_size)
     dmem.reserve(dmem_size);
 }
 
-void Memory::set_flags(f64 result)
-{
-    flags = result;
-}
-
-void Memory::set_flags(s64 result)
-{
-    flags = result;
-}
-
 inline bool Memory::status_v()
 {
-    return flags & VFLAG;
+    return flags & V_FLAG;
 }
 
 inline bool Memory::status_c()
 {
-    return flags & CFLAG;
+    return flags & C_FLAG;
 }
 
 inline bool Memory::status_z()
 {
-    return flags & ZFLAG;
+    return flags & Z_FLAG;
 }
 
 inline bool Memory::status_n()
 {
-    return flags & NFLAG;
+    return flags & N_FLAG;
 }

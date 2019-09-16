@@ -85,3 +85,13 @@ public:
     (reg.check_flags(FLOATF) \
     ? mem.fregfile[reg.address] \
     : mem.iregfile[reg.address])
+
+#define REG_MAX(reg) \
+    (reg.check_flags(FLOATF) \
+    ? std::numeric_limits<f64>::max() \
+    : std::numeric_limits<s64>::max())
+
+#define REG_MIN(reg) \
+    (reg.check_flags(FLOATF) \
+    ? std::numeric_limits<f64>::min() \
+    : std::numeric_limits<s64>::min())
