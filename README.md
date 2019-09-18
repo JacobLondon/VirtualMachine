@@ -3,10 +3,10 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 ## Registers
 * 32 64-bit integer registers
   * r0 - r31
+  * r0 = zero register (always 0)
+  * r31 = pc register (contains the program counter)
 * 32 64-bit floating point registers
   * f0-f31
-* 2 64-bit special registers
-  * zero, pc
 * Flag Register (8-bit)
   * 0x1 - Overflow (v)
   * 0x2 - Carry (c)

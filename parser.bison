@@ -2,7 +2,7 @@
 #include <iostream>
 #include "instruction.hpp"
 extern int yylex();
-void yyerror(const char* s) { std::cerr << "Error - yyerror << " << s << std::endl; }
+void yyerror(const char* s) { std::cerr << "yyerror Error: " << s << std::endl; }
 %}
 
 %union {

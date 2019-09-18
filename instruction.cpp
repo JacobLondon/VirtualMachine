@@ -63,7 +63,7 @@ void Instruction::execute(Memory& mem)
     case CALL: op_call(mem); break;
     case RET:  op_ret(mem);  break;
     default:
-        std::cerr << "Error - Unexpected opcode: " << opcode << std::endl;
+        std::cerr << "Opcode Error: Unexpected opcode '" << opcode << "'. Exiting..." << std::endl;
         exit(-1);
     }
 
@@ -112,7 +112,7 @@ bool Instruction::check_suffix(Memory& mem)
     case AL:    // always, auto added if user didn't
         return true;
     default:
-        std::cerr << "Error - Unexpected status: " << status << std::endl;
+        std::cerr << "Status Error: Unexpected status '" << status << "'. Exiting..." << std::endl;
         exit(-1);
     }
     return false;
@@ -206,6 +206,10 @@ inline void Instruction::op_shr(Memory& mem)
         REG_SET(target, mem, (s64)REG_AT(register1, mem) >> (s64)IMMEDIATE(this));
     else if (check_flags(BITF))
         REG_SET(target, mem, (s64)REG_AT(register1, mem) >> (s64)REG_AT(register2, mem));
+    else {
+        std::cerr << "Parse Error: Instruction 'shr' missing IMMF or BITF flags. Exiting..." << std::endl;
+        exit(-1);
+    }
 }
 
 inline void Instruction::op_shl(Memory& mem)
@@ -214,6 +218,10 @@ inline void Instruction::op_shl(Memory& mem)
         REG_SET(target, mem, (s64)REG_AT(register1, mem) << (s64)IMMEDIATE(this));
     else if (check_flags(BITF))
         REG_SET(target, mem, (s64)REG_AT(register1, mem) << (s64)REG_AT(register2, mem));
+    else {
+        std::cerr << "Parse Error: Instruction 'shl' missing IMMF or BITF flags. Exiting..." << std::endl;
+        exit(-1);
+    }
 }
 
 inline void Instruction::op_cmp(Memory& mem)
@@ -278,6 +286,11 @@ inline void Instruction::op_call(Memory& mem)
 
 inline void Instruction::op_ret(Memory& mem)
 {
+    if (mem.call_stack.size() <= 0) {
+        std::cerr << "Stack Error: Attempted to pop empty stack. Exiting..." << std::endl;
+        exit(-1);
+    }
+
     mem.pc = mem.call_stack.top();
     mem.call_stack.pop();
 }
