@@ -6,7 +6,7 @@ class Processor {
 public:
     Processor(u64 data_size);
 
-    void execute(std::vector<Instruction> instructions);
+    void execute();
     Memory mem;
     bool done = false;
 

@@ -17,19 +17,6 @@ static std::string to_hex(T i)
     return stream.str();
 }
 
-static std::vector<char> to_bytes(const std::string& hex)
-{
-    std::vector<char> bytes;
-
-    for (unsigned int i = 0; i < hex.length(); i += 2) {
-        std::string byteString = hex.substr(i, 2);
-        char byte = (char)strtol(byteString.c_str(), NULL, 16);
-        bytes.push_back(byte);
-    }
-
-    return bytes;
-}
-
 /**
  * Memory
  */
@@ -49,7 +36,7 @@ std::string Memory::dump()
         builder += "_";
     builder += "\n\n";
 
-    builder += "\t\tInteger Registers\t\t\tFloat Registers\n";
+    builder += "\t\tInteger Registers\t\tFloat Registers\n";
 
     for (u64 i = 0; i < len; i++)
         builder += "_";
@@ -58,18 +45,9 @@ std::string Memory::dump()
     for (u64 i = 0; i < iregfile.size(); i++) {
 
         std::string reg_hex = to_hex<s64>(iregfile[i]);
-        std::vector<char> reg_bytes = to_bytes(reg_hex);
 
         builder += std::to_string(i) + ((i == 0) ? " Zero\t" : (i == 31) ? " PC\t" : "\t");
-        builder += reg_hex + "\t";
-
-        // ascii
-        for (char c : reg_bytes) {
-            if (c == 0)
-                builder += ". ";
-            else
-                builder += c + " ";
-        }
+        builder += reg_hex + "\t" + std::to_string(iregfile[i]);
 
         builder += "\t|\t" + std::to_string(fregfile[i]) + "\n";
     }

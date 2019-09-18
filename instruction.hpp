@@ -3,14 +3,16 @@
 #include "memory.hpp"
 
 enum RegisterFlags {
+    NOF = 0x00,
     BITF = 0x01,
     FLOATF = 0x02,
-    //INTF = 0x04,
+    INTF = 0x04,
     IMMF = 0x08,
 };
 
 class RegisterRef {
 public:
+    RegisterRef();
     RegisterRef(u8 address, u8 flags);
     u8 address;
     u8 flags;
@@ -20,8 +22,7 @@ public:
 class Instruction {
 public:
     
-    Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, s64 immediate);
-    Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, f64 immediate);
+    Instruction(u16 opcode, bool set_status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, f64 immediate, u8 flags);
     // TODO This doesn't work correctly
     bool check_flags(u8 flag);
     std::string to_string();
@@ -30,7 +31,7 @@ public:
 
     u16 opcode = 0;
 
-    bool status = false;
+    bool set_status = false;
     u8 flags = 0;
     u8 suffix = 0;
 
@@ -38,10 +39,7 @@ public:
     RegisterRef register1;
     RegisterRef register2;
 
-    union immediate {
-        s64 integer;
-        f64 floating;
-    } immediate;
+    f64 immediate;
 
     void op_add(Memory& mem);
     void op_sub(Memory& mem);
@@ -69,11 +67,6 @@ public:
     void op_call(Memory& mem);
     void op_ret(Memory& mem);
 };
-
-#define IMMEDIATE(instruction) \
-    (instruction->check_flags(FLOATF) \
-    ? instruction->immediate.floating \
-    : instruction->immediate.integer)
 
 #define REG_SET(reg, mem, value) do { \
     if (reg.check_flags(FLOATF)) \
