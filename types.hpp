@@ -17,8 +17,7 @@ class Instruction;
 class Memory;
 class Processor;
 
-const u32 FREG_START = 32;
-const u32 REG_LENGTH = 32;
+const u32 REG_COUNT = 32;
 
 enum IRegisters {
     // integer registers

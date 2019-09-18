@@ -47,11 +47,6 @@ std::string Instruction::to_string()
     return builder;
 }
 
-bool Instruction::check_flags(u8 flag)
-{
-    return ((flags & flag) | flag);
-}
-
 void Instruction::execute(Memory& mem)
 {
     if (!check_suffix(mem))
