@@ -12,10 +12,13 @@ enum MemoryFlags {
 class Memory {
 public:
     Memory(u64 dmem_size);
-    
+    std::string to_string();
+    inline s64 zero();
+    inline s64 pc();
+    inline void pc_rst();
+    inline void pc_inc();
+
     u8 flags = 0;
-    u64 pc = 0;
-    const u64 zero = 0;
     std::vector<s64> iregfile;
     std::vector<f64> fregfile;
     std::vector<Instruction> imem;

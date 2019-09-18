@@ -10,8 +10,8 @@ void Processor::execute(std::vector<Instruction> instructions)
 {
     done = false;
     mem.imem = instructions;
-    for (mem.pc = 0; mem.pc < mem.imem.size(); mem.pc++) {
-        instructions[mem.pc].execute(mem);
+    for (mem.pc_rst(); mem.pc() < mem.imem.size(); mem.pc_inc()) {
+        instructions[mem.pc()].execute(mem);
     }
     done = true;
 }

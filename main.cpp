@@ -3,7 +3,7 @@
 
 int main()
 {
-    processor p(1000);
-    
+    Processor p(1000);
+    std::cout << p.mem.to_string() << std::endl;
     return 0;
 }
