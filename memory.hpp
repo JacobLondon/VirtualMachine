@@ -1,6 +1,5 @@
 #pragma once
 #include "types.hpp"
-#include "instruction.hpp"
 
 enum MemoryFlags {
     V_FLAG = 0x1,
@@ -13,10 +12,11 @@ class Memory {
 public:
     Memory(u64 dmem_size);
     std::string to_string();
-    inline s64 zero();
-    inline s64 pc();
-    inline void pc_rst();
-    inline void pc_inc();
+    s64 zero();
+    s64 pc();
+    void pc_rst();
+    void pc_inc();
+    void pc_jmp(s64 address);
 
     u8 flags = 0;
     std::vector<s64> iregfile;
@@ -29,10 +29,10 @@ public:
     std::unordered_map<std::string, u64> labels;
 
     // get flags
-    inline bool status_v();
-    inline bool status_c();
-    inline bool status_z();
-    inline bool status_n();
+    bool status_v();
+    bool status_c();
+    bool status_z();
+    bool status_n();
 
 };
 
@@ -54,3 +54,5 @@ public:
     if (check1 - check2 < 0) \
         mem.flags |= N_FLAG; \
 } while (0)
+
+#include "instruction.hpp"

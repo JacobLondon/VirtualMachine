@@ -13,6 +13,10 @@ using u32 = uint32_t;
 using u64 = uint64_t;
 using s64 = int64_t;
 
+class Instruction;
+class Memory;
+class Processor;
+
 const u32 FREG_START = 32;
 const u32 REG_LENGTH = 32;
 

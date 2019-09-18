@@ -11,10 +11,10 @@ enum RegisterFlags {
 
 class RegisterRef {
 public:
-    RegisterRef(u8 address, u8 flags) : address{address}, flags{flags} {}
+    RegisterRef(u8 address, u8 flags);
     u8 address;
     u8 flags;
-    inline bool check_flags(u8 flag) { return ((flags & flag) | flag); }
+    bool check_flags(u8 flag);
 };
 
 class Instruction {
@@ -22,8 +22,9 @@ public:
     
     Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, s64 immediate);
     Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, f64 immediate);
+    // TODO This doesn't work correctly
+    bool check_flags(u8 flag);
     std::string to_string();
-    inline bool check_flags(u8 flag) { return ((flags & flag) | flag); }
     bool check_suffix(Memory &memory);
     void execute(Memory& memory);
 
@@ -42,31 +43,31 @@ public:
         f64 floating;
     } immediate;
 
-    inline void op_add(Memory& mem);
-    inline void op_sub(Memory& mem);
-    inline void op_mul(Memory& mem);
-    inline void op_div(Memory& mem);
-    inline void op_mod(Memory& mem);
-    inline void op_nand(Memory& mem);
-    inline void op_and(Memory& mem);
-    inline void op_xnor(Memory& mem);
-    inline void op_xor(Memory& mem);
-    inline void op_nor(Memory& mem);
-    inline void op_or(Memory& mem);
-    inline void op_not(Memory& mem);
-    inline void op_comp(Memory& mem);
-    inline void op_shr(Memory& mem);
-    inline void op_shl(Memory& mem);
-    inline void op_cmp(Memory& mem);
-    inline void op_swp(Memory& mem);
-    inline void op_mov(Memory& mem);
-    inline void op_set(Memory& mem);
-    inline void op_clr(Memory& mem);
-    inline void op_sw(Memory& mem);
-    inline void op_lw(Memory& mem);
-    inline void op_b(Memory& mem);
-    inline void op_call(Memory& mem);
-    inline void op_ret(Memory& mem);
+    void op_add(Memory& mem);
+    void op_sub(Memory& mem);
+    void op_mul(Memory& mem);
+    void op_div(Memory& mem);
+    void op_mod(Memory& mem);
+    void op_nand(Memory& mem);
+    void op_and(Memory& mem);
+    void op_xnor(Memory& mem);
+    void op_xor(Memory& mem);
+    void op_nor(Memory& mem);
+    void op_or(Memory& mem);
+    void op_not(Memory& mem);
+    void op_comp(Memory& mem);
+    void op_shr(Memory& mem);
+    void op_shl(Memory& mem);
+    void op_cmp(Memory& mem);
+    void op_swp(Memory& mem);
+    void op_mov(Memory& mem);
+    void op_set(Memory& mem);
+    void op_clr(Memory& mem);
+    void op_sw(Memory& mem);
+    void op_lw(Memory& mem);
+    void op_b(Memory& mem);
+    void op_call(Memory& mem);
+    void op_ret(Memory& mem);
 };
 
 #define IMMEDIATE(instruction) \

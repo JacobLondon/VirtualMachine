@@ -1,5 +1,16 @@
 #include <limits>
+#include <cmath>
 #include "instruction.hpp"
+
+RegisterRef::RegisterRef(u8 address, u8 flags)
+    : address{address}, flags{flags}
+{
+    // pass
+}
+bool RegisterRef::check_flags(u8 flag)
+{
+    return flags & flag;
+}
 
 Instruction::Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, s64 immediate)
     : opcode{opcode}, status{status}, suffix{suffix}, target{target}, register1{register1}, register2{register2}, immediate{immediate}
@@ -11,6 +22,11 @@ Instruction::Instruction(u16 opcode, bool status, u8 suffix, RegisterRef target,
     : opcode{opcode}, status{status}, suffix{suffix}, target{target}, register1{register1}, register2{register2}, immediate{immediate}
 {
     
+}
+
+bool Instruction::check_flags(u8 flag)
+{
+    return flags & flag;
 }
 
 std::string Instruction::to_string()
@@ -29,6 +45,11 @@ std::string Instruction::to_string()
             builder += std::to_string(immediate.integer);
     }
     return builder;
+}
+
+bool Instruction::check_flags(u8 flag)
+{
+    return ((flags & flag) | flag);
 }
 
 void Instruction::execute(Memory& mem)
@@ -78,7 +99,7 @@ void Instruction::execute(Memory& mem)
 
 bool Instruction::check_suffix(Memory& mem)
 {
-    switch(status) {
+    switch(suffix) {
     case EQ:    // z set
         return mem.status_z();
     case NE:    // z clear
@@ -118,7 +139,7 @@ bool Instruction::check_suffix(Memory& mem)
     return false;
 }
 
-inline void Instruction::op_add(Memory& mem)
+void Instruction::op_add(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, REG_AT(register1, mem) + IMMEDIATE(this));
@@ -126,7 +147,7 @@ inline void Instruction::op_add(Memory& mem)
         REG_SET(target, mem, REG_AT(register1, mem) + REG_AT(register2, mem));
 }
 
-inline void Instruction::op_sub(Memory& mem)
+void Instruction::op_sub(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, REG_AT(register1, mem) - IMMEDIATE(this));
@@ -134,7 +155,7 @@ inline void Instruction::op_sub(Memory& mem)
         REG_SET(target, mem, REG_AT(register1, mem) - REG_AT(register2, mem));
 }
 
-inline void Instruction::op_mul(Memory& mem)
+void Instruction::op_mul(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, REG_AT(register1, mem) * IMMEDIATE(this));
@@ -142,7 +163,7 @@ inline void Instruction::op_mul(Memory& mem)
         REG_SET(target, mem, REG_AT(register1, mem) * REG_AT(register2, mem));
 }
 
-inline void Instruction::op_div(Memory& mem)
+void Instruction::op_div(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, REG_AT(register1, mem) / IMMEDIATE(this));
@@ -150,7 +171,7 @@ inline void Instruction::op_div(Memory& mem)
         REG_SET(target, mem, REG_AT(register1, mem) / REG_AT(register2, mem));
 }
 
-inline void Instruction::op_mod(Memory& mem)
+void Instruction::op_mod(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, fmod(REG_AT(register1, mem), IMMEDIATE(this)));
@@ -158,7 +179,7 @@ inline void Instruction::op_mod(Memory& mem)
         REG_SET(target, mem, fmod(REG_AT(register1, mem), REG_AT(register2, mem)));
 }
 
-inline void Instruction::op_and(Memory& mem)
+void Instruction::op_and(Memory& mem)
 {
     if (check_flags(IMMF | BITF))
         REG_SET(target, mem, (s64)REG_AT(register1, mem) & (s64)IMMEDIATE(this));
@@ -170,7 +191,7 @@ inline void Instruction::op_and(Memory& mem)
         REG_SET(target, mem, REG_AT(register1, mem) && REG_AT(register2, mem));
 }
 
-inline void Instruction::op_xor(Memory& mem)
+void Instruction::op_xor(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, (s64)REG_AT(register1, mem) ^ (s64)IMMEDIATE(this));
@@ -178,7 +199,7 @@ inline void Instruction::op_xor(Memory& mem)
         REG_SET(target, mem, (s64)REG_AT(register1, mem) ^ (s64)REG_AT(register2, mem));
 }
 
-inline void Instruction::op_or(Memory& mem)
+void Instruction::op_or(Memory& mem)
 {
     if (check_flags(IMMF | BITF))
         REG_SET(target, mem, (s64)REG_AT(register1, mem) | (s64)IMMEDIATE(this));
@@ -190,17 +211,17 @@ inline void Instruction::op_or(Memory& mem)
         REG_SET(target, mem, REG_AT(register1, mem) || REG_AT(register2, mem));
 }
 
-inline void Instruction::op_not(Memory& mem)
+void Instruction::op_not(Memory& mem)
 {
     REG_SET(target, mem, !REG_AT(register1, mem));
 }
 
-inline void Instruction::op_comp(Memory& mem)
+void Instruction::op_comp(Memory& mem)
 {
     REG_SET(target, mem, ~(s64)REG_AT(register1, mem));
 }
 
-inline void Instruction::op_shr(Memory& mem)
+void Instruction::op_shr(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, (s64)REG_AT(register1, mem) >> (s64)IMMEDIATE(this));
@@ -212,7 +233,7 @@ inline void Instruction::op_shr(Memory& mem)
     }
 }
 
-inline void Instruction::op_shl(Memory& mem)
+void Instruction::op_shl(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, (s64)REG_AT(register1, mem) << (s64)IMMEDIATE(this));
@@ -224,19 +245,19 @@ inline void Instruction::op_shl(Memory& mem)
     }
 }
 
-inline void Instruction::op_cmp(Memory& mem)
+void Instruction::op_cmp(Memory& mem)
 {
     status = true;
 }
 
-inline void Instruction::op_swp(Memory& mem)
+void Instruction::op_swp(Memory& mem)
 {
     f64 temp = REG_AT(target, mem);
     REG_SET(target, mem, REG_AT(register1, mem));
     REG_SET(register1, mem, temp);
 }
 
-inline void Instruction::op_mov(Memory& mem)
+void Instruction::op_mov(Memory& mem)
 {
     if (check_flags(IMMF))
         REG_SET(target, mem, IMMEDIATE(this));
@@ -244,7 +265,7 @@ inline void Instruction::op_mov(Memory& mem)
         REG_SET(target, mem, REG_AT(register1, mem));
 }
 
-inline void Instruction::op_set(Memory& mem)
+void Instruction::op_set(Memory& mem)
 {
     if (target.check_flags(FLOATF))
         mem.fregfile[target.address] = std::numeric_limits<f64>::max();
@@ -252,12 +273,12 @@ inline void Instruction::op_set(Memory& mem)
         mem.iregfile[target.address] = std::numeric_limits<s64>::max();
 }
 
-inline void Instruction::op_clr(Memory& mem)
+void Instruction::op_clr(Memory& mem)
 {
     REG_SET(target, mem, 0);
 }
 
-inline void Instruction::op_sw(Memory& mem)
+void Instruction::op_sw(Memory& mem)
 {
     if (target.check_flags(FLOATF))
         mem.dmem[IMMEDIATE(this)] = reinterpret_cast<s64&>(mem.fregfile[target.address]);
@@ -265,7 +286,7 @@ inline void Instruction::op_sw(Memory& mem)
         mem.dmem[IMMEDIATE(this)] = mem.fregfile[target.address];
 }
 
-inline void Instruction::op_lw(Memory& mem)
+void Instruction::op_lw(Memory& mem)
 {
     if (target.check_flags(FLOATF))
         mem.fregfile[target.address] = reinterpret_cast<f64&>(mem.dmem[IMMEDIATE(this)]);
@@ -273,24 +294,24 @@ inline void Instruction::op_lw(Memory& mem)
         mem.iregfile[target.address] = mem.dmem[IMMEDIATE(this)];
 }
 
-inline void Instruction::op_b(Memory& mem)
+void Instruction::op_b(Memory& mem)
 {
-    mem.pc = (s64)(REG_AT(target, mem) + IMMEDIATE(this));
+    mem.pc_jmp((s64)(REG_AT(target, mem) + IMMEDIATE(this)));
 }
 
-inline void Instruction::op_call(Memory& mem)
+void Instruction::op_call(Memory& mem)
 {
-    mem.call_stack.push(mem.pc);
-    mem.pc = (s64)(REG_AT(target, mem) + IMMEDIATE(this));
+    mem.call_stack.push(mem.pc());
+    mem.pc_jmp((s64)(REG_AT(target, mem) + IMMEDIATE(this)));
 }
 
-inline void Instruction::op_ret(Memory& mem)
+void Instruction::op_ret(Memory& mem)
 {
     if (mem.call_stack.size() <= 0) {
         std::cerr << "Stack Error: Attempted to pop empty stack. Exiting..." << std::endl;
         exit(-1);
     }
 
-    mem.pc = mem.call_stack.top();
+    mem.pc_jmp(mem.call_stack.top());
     mem.call_stack.pop();
 }
