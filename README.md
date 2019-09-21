@@ -72,24 +72,21 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | call        | j    |             | call                       | branch to a function and link, used with ret |
 | ret         | j    |             | ret                        | return to link at top of link stack |
 
-## [ARM Suffix Reference](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0473c/CEGBHJCJ.html)
+## Suffixes
 * Allocating unsigned 8-bit integers, so 2^8 suffices possible
-* TODO: fix suffixes:
 
-| Suffix | Flags | Meaning |
-|--------|-------|---------|
-| EQ | Z set | Equal (==)
-| NE | Z clear | Not Equal (!=)
-| CS or HS | C set | Higher, Same (unsigned >=)
-| CC or LO | C clear | Lower (unsigned <)
-| MI | N set | Negative
-| PL | N clear | Positive or zero
-| VS | V set | Overflow
-| VC | V clear | No overflow
-| HI | V set and Z clear | Higher (unsigned >)
-| LS | C clear or Z set | Lower or same (unsigned <=)
-| GE | N and V the same | Signed >=
-| LT | N and V differ | Signed <
-| GT | Z clear, N and V the same | Signed >
-| LE | Z set, N and V differ | Signed <=
+| Suffix | Meaning |
+|--------|---------|
+| CS | Carry set
+| CC | Carry clear
+| ZS | Zero set
+| ZC | Zero clear
+| NS | Negative set
+| NC | Negative clear
+| EQ | Equal (==)
+| NE | Not Equal (!=)
+| GE | Signed >=
+| LT | Signed <
+| GT | Signed >
+| LE | Signed <=
 | AL | Any | Always. Normally omitted.
