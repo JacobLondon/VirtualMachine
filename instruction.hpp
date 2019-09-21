@@ -2,27 +2,16 @@
 #include "types.hpp"
 #include "memory.hpp"
 
-enum RegisterFlags {
+enum InstructionFlags {
     NOF = 0x00,
     BITF = 0x01,
-    FLOATF = 0x02,
-    INTF = 0x04,
-    IMMF = 0x08,
-};
-
-class RegisterRef {
-public:
-    RegisterRef();
-    RegisterRef(u8 address, u8 flags);
-    u8 address;
-    u8 flags;
-    bool check_flags(u8 flag);
+    IMMF = 0x02,
 };
 
 class Instruction {
 public:
     
-    Instruction(u16 opcode, bool set_status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, f64 immediate, u8 flags);
+    Instruction(u16 opcode, bool set_status, u8 suffix, u8 target, u8 register1, u8 register2, f64 immediate, u8 flags);
     bool check_flags(u8 flag);
     std::string to_string();
     bool check_suffix(Memory &memory);
@@ -34,9 +23,9 @@ public:
     u8 flags = 0;
     u8 suffix = 0;
 
-    RegisterRef target;
-    RegisterRef register1;
-    RegisterRef register2;
+    u8 target;
+    u8 register1;
+    u8 register2;
 
     f64 immediate;
 
@@ -72,30 +61,30 @@ public:
 };
 
 #define REG_INC(reg, mem, value) do { \
-    if (reg.check_flags(FLOATF)) \
-        mem.fregfile[reg.address] = mem.fregfile[reg.address] + value; \
+    if (reg >= REG_COUNT) \
+        mem.fregfile[reg - REG_COUNT] = mem.fregfile[reg - REG_COUNT] + value; \
     else \
-        mem.iregfile[reg.address] = mem.iregfile[reg.address] + value; \
+        mem.iregfile[reg] = mem.iregfile[reg] + value; \
 } while (0)
 
 #define REG_SET(reg, mem, value) do { \
-    if (reg.check_flags(FLOATF)) \
-        mem.fregfile[reg.address] = value; \
+    if (reg >= REG_COUNT) \
+        mem.fregfile[reg - REG_COUNT] = value; \
     else \
-        mem.iregfile[reg.address] = value; \
+        mem.iregfile[reg] = value; \
 } while (0)
 
 #define REG_AT(reg, mem) \
-    (reg.check_flags(FLOATF) \
-    ? mem.fregfile[reg.address] \
-    : mem.iregfile[reg.address])
+    (reg >= REG_COUNT  \
+    ? mem.fregfile[reg - REG_COUNT] \
+    : mem.iregfile[reg])
 
 #define REG_MAX(reg) \
-    (reg.check_flags(FLOATF) \
+    (reg >= REG_COUNT \
     ? std::numeric_limits<f64>::max() \
     : std::numeric_limits<s64>::max())
 
 #define REG_MIN(reg) \
-    (reg.check_flags(FLOATF) \
+    (reg >= REG_COUNT \
     ? std::numeric_limits<f64>::min() \
     : std::numeric_limits<s64>::min())

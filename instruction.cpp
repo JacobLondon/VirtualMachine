@@ -2,23 +2,7 @@
 #include <cmath>
 #include "instruction.hpp"
 
-RegisterRef::RegisterRef()
-    : address{0}, flags{0}
-{
-    // pass
-}
-
-RegisterRef::RegisterRef(u8 address, u8 flags)
-    : address{address}, flags{flags}
-{
-    // pass
-}
-bool RegisterRef::check_flags(u8 flag)
-{
-    return flags & flag;
-}
-
-Instruction::Instruction(u16 opcode, bool set_status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, f64 immediate, u8 flags)
+Instruction::Instruction(u16 opcode, bool set_status, u8 suffix, u8 target, u8 register1, u8 register2, f64 immediate, u8 flags)
     : opcode{opcode}, set_status{set_status}, suffix{suffix}, target{target}, register1{register1}, register2{register2}, immediate{immediate}, flags{flags}
 {
 
@@ -34,9 +18,9 @@ std::string Instruction::to_string()
     std::string builder = "";
     builder += "opcode: " + std::to_string(opcode) + "\n";
     builder += "suffix: " + std::to_string(suffix) + "\n";
-    builder += "target: " + std::to_string(target.address) + "\n";
-    builder += "register1: " + std::to_string(register1.address) + "\n";
-    builder += "register2: " + std::to_string(register2.address) + "\n";
+    builder += "target: " + std::to_string(target) + "\n";
+    builder += "register1: " + std::to_string(register1) + "\n";
+    builder += "register2: " + std::to_string(register2) + "\n";
     builder += "Immediate: " + std::to_string(immediate) + "\n";
 
     return builder;
@@ -49,6 +33,7 @@ void Instruction::execute(Memory& mem)
 
     switch (opcode) {
     // r type
+    case NOP:  return;
     case ADD:  op_add(mem);  break;
     case SUB:  op_sub(mem);  break;
     case MUL:  op_mul(mem);  break;
@@ -129,11 +114,8 @@ bool Instruction::check_suffix(Memory& mem)
 
 void Instruction::op_add(Memory& mem)
 {
-    if (check_flags(IMMF)) {
-        std::cout << "reg1: " << REG_AT(register1, mem) << "imm: " << immediate << std::endl;
-        s64 value = REG_AT(register1, mem) + immediate;
-        REG_SET(target, mem, value);
-    }
+    if (check_flags(IMMF))
+        REG_SET(target, mem, REG_AT(register1, mem) + immediate);
     else
         REG_SET(target, mem, REG_AT(register1, mem) + REG_AT(register2, mem));
 }
@@ -258,10 +240,10 @@ void Instruction::op_mov(Memory& mem)
 
 void Instruction::op_set(Memory& mem)
 {
-    if (target.check_flags(FLOATF))
-        mem.fregfile[target.address] = std::numeric_limits<f64>::max();
+    if (target >= REG_COUNT)
+        mem.fregfile[target - REG_COUNT] = std::numeric_limits<f64>::max();
     else
-        mem.iregfile[target.address] = std::numeric_limits<s64>::max();
+        mem.iregfile[target] = std::numeric_limits<s64>::max();
 }
 
 void Instruction::op_clr(Memory& mem)
@@ -271,18 +253,18 @@ void Instruction::op_clr(Memory& mem)
 
 void Instruction::op_sw(Memory& mem)
 {
-    if (target.check_flags(FLOATF))
-        mem.dmem[immediate] = reinterpret_cast<s64&>(mem.fregfile[target.address]);
+    if (target >= REG_COUNT)
+        mem.dmem[immediate] = reinterpret_cast<s64&>(mem.fregfile[target - REG_COUNT]);
     else
-        mem.dmem[immediate] = mem.fregfile[target.address];
+        mem.dmem[immediate] = mem.iregfile[target];
 }
 
 void Instruction::op_lw(Memory& mem)
 {
-    if (target.check_flags(FLOATF))
-        mem.fregfile[target.address] = reinterpret_cast<f64&>(mem.dmem[immediate]);
+    if (target >= REG_COUNT)
+        mem.fregfile[target - REG_COUNT] = reinterpret_cast<f64&>(mem.dmem[immediate]);
     else
-        mem.iregfile[target.address] = mem.dmem[immediate];
+        mem.iregfile[target] = mem.dmem[immediate];
 }
 
 void Instruction::op_inc(Memory & mem)
@@ -297,10 +279,10 @@ void Instruction::op_dec(Memory & mem)
 
 void Instruction::op_push(Memory & mem)
 {
-    if (target.check_flags(FLOATF))
-        mem.data_stack.push(reinterpret_cast<s64&>(mem.fregfile[target.address]));
+    if (target >= REG_COUNT)
+        mem.data_stack.push(reinterpret_cast<s64&>(mem.fregfile[target - REG_COUNT]));
     else
-        mem.data_stack.push(mem.fregfile[target.address]);
+        mem.data_stack.push(mem.iregfile[target]);
 }
 
 void Instruction::op_pop(Memory & mem)
@@ -310,10 +292,10 @@ void Instruction::op_pop(Memory & mem)
         exit(-1);
     }
 
-    if (target.check_flags(FLOATF))
-        mem.fregfile[target.address] = reinterpret_cast<f64&>(mem.data_stack.top());
+    if (target >= REG_COUNT)
+        mem.fregfile[target - REG_COUNT] = reinterpret_cast<f64&>(mem.data_stack.top());
     else
-        mem.iregfile[target.address] = mem.data_stack.top();
+        mem.iregfile[target] = mem.data_stack.top();
     
     mem.data_stack.pop();
 }

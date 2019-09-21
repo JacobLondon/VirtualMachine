@@ -1,21 +1,5 @@
 #include <limits>
-#include <iomanip>
-#include <sstream>
 #include "memory.hpp"
-
-/**
- * util
- */
-
-template<typename T>
-static std::string to_hex(T i)
-{
-    std::stringstream stream;
-    stream << "0x" 
-           << std::setfill ('0') << std::setw(sizeof(T) * 2) 
-           << std::hex << i;
-    return stream.str();
-}
 
 /**
  * Memory
@@ -26,7 +10,7 @@ Memory::Memory(u64 dmem_size)
 {
     dmem.reserve(dmem_size);
 }
-
+/*
 std::string Memory::dump()
 {
     u32 len = 80;
@@ -54,7 +38,7 @@ std::string Memory::dump()
 
     return builder;
 }
-
+*/
 s64 Memory::zero()
 {
     return iregfile[0];

@@ -11,12 +11,13 @@ int main()
     p.mem.imem.push_back(Instruction(ADD, false, PL, RegisterRef(R2, INTF),   RegisterRef(R1, INTF), RegisterRef(F1, FLOATF), 0,     NOF ));
     */
     
-    p.mem.imem.push_back(Instruction(MOV, false, AL, RegisterRef(R1, INTF),   RegisterRef(),           RegisterRef(),         2, IMMF));
-    p.mem.imem.push_back(Instruction(DEC, false, AL, RegisterRef(R1, INTF),   RegisterRef(),           RegisterRef(),        0, NOF));
-    p.mem.imem.push_back(Instruction(CMP, false, AL, RegisterRef(),   RegisterRef(R1, INTF),           RegisterRef(ZERO, INTF),        0, NOF));
-    p.mem.imem.push_back(Instruction(JMP, false, ZC, RegisterRef(ZERO, INTF), RegisterRef(),           RegisterRef(),         0, IMMF));
+    p.mem.imem.push_back(Instruction(NOP, false, AL, ZERO, ZERO, ZERO, 0, NOF));
+    
+    p.mem.imem.push_back(Instruction(MOV, false, AL, R1,   ZERO, ZERO, 2, IMMF));
+    p.mem.imem.push_back(Instruction(DEC, false, AL, R1,   ZERO, ZERO, 0, NOF));
+    p.mem.imem.push_back(Instruction(CMP, false, AL, ZERO,   R1, ZERO, 0, NOF));
+    p.mem.imem.push_back(Instruction(JMP, false, ZC, ZERO, ZERO, ZERO, 1, IMMF));
 
     p.execute();
-    std::cout << p.mem.dump() << std::endl;
     return 0;
 }

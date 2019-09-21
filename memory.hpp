@@ -4,7 +4,6 @@
 class Memory {
 public:
     Memory(u64 dmem_size);
-    std::string dump();
     s64 zero();
     s64 pc();
     void pc_rst();
