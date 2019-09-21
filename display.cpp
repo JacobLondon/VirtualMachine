@@ -47,6 +47,7 @@ void Display::update(Memory& mem)
     int icol = 5;
     int fcol = 40;
     int instcol = 70;
+    int flagcol = 135;
     int spacing = 3;
     std::string buf;
 
@@ -79,6 +80,7 @@ void Display::update(Memory& mem)
             else
                 buf += "    \t";
             buf += mem.imem[mem.pc() + i].to_string();
+            buf += "\t|";
             write_str(buf, instcol, j+spacing);
             j++;
         }
@@ -87,6 +89,18 @@ void Display::update(Memory& mem)
     for (; j < REG_COUNT; j++) {
         write_str("\t\t\t\t\t\t\t\t", instcol, j+spacing);
     }
+
+    // flags
+    write_str("Flags", flagcol, 1);
+    write_str("CS  ( Carry )\t" + std::to_string(mem.flags.carry),         flagcol, 0 + spacing);
+    write_str("ZS ( $ == 0 )\t" + std::to_string(mem.flags.zero),          flagcol, 2 + spacing);
+    write_str("NE  ( $ < 0 )\t" + std::to_string(mem.flags.neg),           flagcol, 4 + spacing);
+    write_str("EQ ( $ == $ )\t" + std::to_string(mem.flags.equal),         flagcol, 6 + spacing);
+    write_str("LT  ( $ < $ )\t" + std::to_string(mem.flags.less_than),     flagcol, 8 + spacing);
+    write_str("LE ( $ <= $ )\t" + std::to_string(!mem.flags.greater_than), flagcol, 9 + spacing);
+    write_str("GE ( $ >= $ )\t" + std::to_string(!mem.flags.less_than),    flagcol, 10 + spacing);
+    write_str("GT  ( $ > $ )\t" + std::to_string(mem.flags.greater_than),  flagcol, 11 + spacing);
+    write_str("AL   ( true )\t" + std::to_string(mem.flags.always),        flagcol, 12 + spacing);
 
     write_str("Press [Ss] to step\t\tPress [space] to toggle step/run mode\n", 0, 40);
 

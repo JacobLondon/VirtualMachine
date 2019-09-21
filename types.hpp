@@ -34,26 +34,6 @@ enum Registers {
     F30, F31,
 };
 
-/*
-enum Suffixes {
-    EQ,
-    NE,
-    CS, HS,
-    CC, LO,
-    MI,
-    PL,
-    VS,
-    VC,
-    HI,
-    LS,
-    GE,
-    LT,
-    GT,
-    LE,
-    AL,
-};
-*/
-
 enum Suffixes {
     CS, CC,     // carry s/c
     ZS, ZC,     // zero s/c
