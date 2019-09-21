@@ -16,12 +16,18 @@ bool Instruction::check_flags(u8 flag)
 std::string Instruction::to_string()
 {
     std::string builder = "";
-    builder += "opcode: " + std::to_string(opcode) + "\n";
-    builder += "suffix: " + std::to_string(suffix) + "\n";
-    builder += "target: " + std::to_string(target) + "\n";
-    builder += "register1: " + std::to_string(register1) + "\n";
-    builder += "register2: " + std::to_string(register2) + "\n";
-    builder += "Immediate: " + std::to_string(immediate) + "\n";
+    builder += OPCODE_LOOKUP[opcode];
+    if (set_status)
+        builder += "S";
+    builder += SUFFIX_LOOKUP[suffix];
+    builder += "\t";
+    builder += (target >= REG_COUNT ? "F" + std::to_string(target - REG_COUNT) : "R" + std::to_string(target));
+    builder += "\t";
+    builder += (register1 >= REG_COUNT ? "F" + std::to_string(register1 - REG_COUNT) : "R" + std::to_string(register1));
+    builder += "\t";
+    builder += (register2 >= REG_COUNT ? "F" + std::to_string(register2 - REG_COUNT) : "R" + std::to_string(register2));
+    builder += "\t";
+    builder += std::to_string(immediate);
 
     return builder;
 }

@@ -45,7 +45,9 @@ static void write_str(std::string s, int x, int y)
 void Display::update(Memory& mem)
 {
     int icol = 5;
-    int fcol = 30;
+    int fcol = 40;
+    int instcol = 70;
+    int spacing = 3;
     std::string buf;
 
     write_str("Integer Registers", icol, 1);
@@ -53,14 +55,40 @@ void Display::update(Memory& mem)
         buf = to_hex<s64>(mem.iregfile[i]);
         buf += "\t";
         buf += std::to_string(mem.iregfile[i]);
-        write_str(buf, icol, i+3);
+        buf += "\t|";
+        write_str(buf, icol, i+spacing);
     }
 
     write_str("Float Registers", fcol, 1);
     for (int i = 0; i < REG_COUNT; i++) {
         buf = std::to_string(mem.fregfile[i]);
-        write_str(buf, fcol, i+3);
+        buf += "\t\t|";
+        write_str(buf, fcol, i+spacing);
     }
+
+    write_str("Instructions", instcol, 1);
+    int j = 0, i = 0;
+    // show instructions around the current pc
+    for (i = -REG_COUNT / 2; i < REG_COUNT; i++) {
+        if (j >= REG_COUNT)
+            break;
+        if (mem.pc() + i >= 0 && mem.pc() + i < mem.imem.size()) {
+            buf = std::to_string(mem.pc() + i) + " ";
+            if (mem.pc() == mem.pc() + i)
+                buf += ">>>\t";
+            else
+                buf += "    \t";
+            buf += mem.imem[mem.pc() + i].to_string();
+            write_str(buf, instcol, j+spacing);
+            j++;
+        }
+    }
+    // clear the extraneous rows
+    for (; j < REG_COUNT; j++) {
+        write_str("\t\t\t\t\t\t\t\t", instcol, j+spacing);
+    }
+
+    write_str("Press [Ss] to step\t\tPress [space] to toggle step/run mode\n", 0, 40);
 
     handle_keys();
 }

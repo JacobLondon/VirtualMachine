@@ -65,6 +65,17 @@ enum Suffixes {
     AL,         // always
 };
 
+const std::vector<std::string> SUFFIX_LOOKUP {
+    "CS", "CC",
+    "ZS", "ZC",
+    "NS", "NC",
+    "EQ",
+    "NE",
+    "LT", "GE",
+    "GT", "LE",
+    "", // AL blank
+};
+
 enum Opcodes {
     NOP,
     ADD,
@@ -93,4 +104,34 @@ enum Opcodes {
     JMP,
     CALL,
     RET,
+};
+
+const std::vector<std::string> OPCODE_LOOKUP {
+    "NOP",
+    "ADD",
+    "SUB",
+    "MUL",
+    "DIV",
+    "MOD",
+    "AND",
+    "XOR",
+    "OR",
+    "NOT",
+    "COMP",
+    "SHR",
+    "SHL",
+    "CMP",
+    "SWP",
+    "MOV",
+    "SET",
+    "CLR",
+    "SW",
+    "LW",
+    "INC",
+    "DEC",
+    "PUSH",
+    "POP",
+    "JMP",
+    "CALL",
+    "RET",
 };
