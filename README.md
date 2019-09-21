@@ -1,7 +1,10 @@
 # Virtual Machine
 A virtual processor which has similar characteristics to an ARM processor. Written in C++. Due to the nature of the processor being in software, the instructions will not follow fixed length formats. Additionally, the virtual machine will be a single cycle system; parallelism is not planned for at this stage. The virtual machine will be a 64-bit system; therefore the host machine must be able to support 64-bit C++ operations.
 ## Requirements
-Must be able to link ncurses.h
+* Must be able to link ncurses.h
+* Due to an issue with ncurses' interaction with printing repeated characters, $TERM (on an Ubuntu system) must be set to `gnome`
+  * `export TERM=gnome`
+  * This issue may be different depending on the system.
 ## Registers
 * 32 64-bit integer registers
   * r0 - r31
