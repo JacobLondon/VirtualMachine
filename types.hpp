@@ -34,6 +34,7 @@ enum FRegisters {
     F30, F31,
 };
 
+/*
 enum Suffixes {
     EQ,
     NE,
@@ -50,6 +51,18 @@ enum Suffixes {
     GT,
     LE,
     AL,
+};
+*/
+
+enum Suffixes {
+    CS, CC,     // carry s/c
+    ZS, ZC,     // zero s/c
+    NS, NC,     // negative s/c
+    EQ,         // equal
+    NE,         // not equal
+    LT, GE,     // less than, greater than or equal to
+    GT, LE,     // greater than, less than or equal to
+    AL,         // always
 };
 
 enum Opcodes {
@@ -73,7 +86,11 @@ enum Opcodes {
     CLR,
     SW,
     LW,
-    B,
+    INC,
+    DEC,
+    PUSH,
+    POP,
+    JMP,
     CALL,
     RET,
 };

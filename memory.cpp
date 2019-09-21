@@ -36,7 +36,7 @@ std::string Memory::dump()
         builder += "_";
     builder += "\n\n";
 
-    builder += "\t\tInteger Registers\t\tFloat Registers\n";
+    builder += "\tInteger Registers\t\t\tFloat Registers\n";
 
     for (u64 i = 0; i < len; i++)
         builder += "_";
@@ -51,8 +51,6 @@ std::string Memory::dump()
 
         builder += "\t|\t" + std::to_string(fregfile[i]) + "\n";
     }
-
-    builder += "\nFlags: " + to_hex<u8>(flags) + "\n";
 
     return builder;
 }
@@ -82,26 +80,31 @@ void Memory::pc_inc()
     iregfile[iregfile.size() - 1]++;
 }
 
-/**
- * statuses
- */
-
-bool Memory::status_v()
+void Memory::clear_flags()
 {
-    return flags & V_FLAG;
+    flags.carry        = false;
+    flags.zero         = false;
+    flags.neg          = false;
+    flags.equal        = false;
+    flags.less_than    = false;
+    flags.greater_than = false;
+    flags.always       = true;
 }
 
-bool Memory::status_c()
+void Memory::set_flags(f64 result)
 {
-    return flags & C_FLAG;
-}
+    clear_flags();
 
-bool Memory::status_z()
-{
-    return flags & Z_FLAG;
-}
-
-bool Memory::status_n()
-{
-    return flags & N_FLAG;
+    if (result < 0)
+        flags.carry = true;
+    if (result == 0)
+        flags.zero = true;
+    if (result < 0)
+        flags.neg = true;
+    if (result == 0)
+        flags.equal = true;
+    if (result < 0)
+        flags.less_than = true;
+    if (result > 0)
+        flags.greater_than = true;
 }

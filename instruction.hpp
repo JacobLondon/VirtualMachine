@@ -23,7 +23,6 @@ class Instruction {
 public:
     
     Instruction(u16 opcode, bool set_status, u8 suffix, RegisterRef target, RegisterRef register1, RegisterRef register2, f64 immediate, u8 flags);
-    // TODO This doesn't work correctly
     bool check_flags(u8 flag);
     std::string to_string();
     bool check_suffix(Memory &memory);
@@ -63,10 +62,21 @@ public:
     void op_clr(Memory& mem);
     void op_sw(Memory& mem);
     void op_lw(Memory& mem);
-    void op_b(Memory& mem);
+    void op_inc(Memory & mem);
+    void op_dec(Memory & mem);
+    void op_push(Memory & mem);
+    void op_pop(Memory & mem);
+    void op_jmp(Memory& mem);
     void op_call(Memory& mem);
     void op_ret(Memory& mem);
 };
+
+#define REG_INC(reg, mem, value) do { \
+    if (reg.check_flags(FLOATF)) \
+        mem.fregfile[reg.address] = mem.fregfile[reg.address] + value; \
+    else \
+        mem.iregfile[reg.address] = mem.iregfile[reg.address] + value; \
+} while (0)
 
 #define REG_SET(reg, mem, value) do { \
     if (reg.check_flags(FLOATF)) \

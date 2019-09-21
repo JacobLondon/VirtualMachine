@@ -68,12 +68,13 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | dec         | i    |             | dec                        | pre decrement |
 | push        | i    |             | push                       | push register or immediate to data stack |
 | pop         | r    |             | pop                        | pop data stack into register |
-| b           | j    |             | b                          | branch to a register's value + immediate offset
+| jmp         | j    |             | b                          | branch to a register's value + immediate offset
 | call        | j    |             | call                       | branch to a function and link, used with ret |
 | ret         | j    |             | ret                        | return to link at top of link stack |
 
 ## [ARM Suffix Reference](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0473c/CEGBHJCJ.html)
 * Allocating unsigned 8-bit integers, so 2^8 suffices possible
+* TODO: fix suffixes:
 
 | Suffix | Flags | Meaning |
 |--------|-------|---------|

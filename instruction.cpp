@@ -69,8 +69,12 @@ void Instruction::execute(Memory& mem)
     case CLR:  op_clr(mem);  break;
     case SW:   op_sw(mem);   break;
     case LW:   op_lw(mem);   break;
+    case INC:  op_inc(mem);  break;
+    case DEC:  op_dec(mem);  break;
+    case PUSH: op_push(mem); break;
+    case POP:  op_pop(mem);  break;
     // j type
-    case B:    op_b(mem);    break;
+    case JMP:  op_jmp(mem);  break;
     case CALL: op_call(mem); break;
     case RET:  op_ret(mem);  break;
     default:
@@ -82,44 +86,38 @@ void Instruction::execute(Memory& mem)
         return;
     
     if (check_flags(IMMF))
-        MEM_SET_FLAGS(mem, target, REG_AT(register1, mem), immediate);
+        mem.set_flags(REG_AT(register1, mem) - immediate);
     else
-        MEM_SET_FLAGS(mem, target, REG_AT(register1, mem), REG_AT(register2, mem));
+        mem.set_flags(REG_AT(register1, mem) - REG_AT(register2, mem));
 }
 
 bool Instruction::check_suffix(Memory& mem)
 {
     switch(suffix) {
-    case EQ:    // z set
-        return mem.status_z();
-    case NE:    // z clear
-        return !mem.status_z();
-    case CS:    // c set
-    case HS:
-        return mem.status_c();
-    case CC:    // c clear
-    case LO:
-        return !mem.status_c();
-    case MI:    // n set
-        return mem.status_n();
-    case PL:    // n clear
-        return !mem.status_n();
-    case VS:    // v set
-        return mem.status_v();
-    case VC:    // v clear
-        return !mem.status_v();
-    case HI:    // v set and z clear
-        return mem.status_v() && !mem.status_z();
-    case LS:    // c clear and z set
-        return !mem.status_c() && mem.status_z();
-    case GE:    // n == v
-        return mem.status_n() == mem.status_v();
-    case LT:    // n != v
-        return mem.status_n() != mem.status_v();
-    case GT:    // z clear, n == v
-        return !mem.status_z() && (mem.status_n() == mem.status_v());
-    case LE:    // z set, n != v
-        return mem.status_z() && (mem.status_n() != mem.status_v());
+    case CS:
+        return mem.flags.carry;
+    case CC:
+        return !mem.flags.carry;
+    case ZS:
+        return mem.flags.zero;
+    case ZC:
+        return !mem.flags.zero;
+    case NS:
+        return mem.flags.neg;
+    case NC:
+        return !mem.flags.neg;
+    case EQ:
+        return mem.flags.equal;
+    case NE:
+        return !mem.flags.equal;
+    case LT:
+        return mem.flags.less_than;
+    case GE:
+        return !mem.flags.less_than;
+    case GT:
+        return mem.flags.greater_than;
+    case LE:
+        return !mem.flags.greater_than;
     case AL:    // always, auto added if user didn't
         return true;
     default:
@@ -287,7 +285,40 @@ void Instruction::op_lw(Memory& mem)
         mem.iregfile[target.address] = mem.dmem[immediate];
 }
 
-void Instruction::op_b(Memory& mem)
+void Instruction::op_inc(Memory & mem)
+{
+    REG_INC(target, mem, 1);
+}
+
+void Instruction::op_dec(Memory & mem)
+{
+    REG_INC(target, mem, -1);
+}
+
+void Instruction::op_push(Memory & mem)
+{
+    if (target.check_flags(FLOATF))
+        mem.data_stack.push(reinterpret_cast<s64&>(mem.fregfile[target.address]));
+    else
+        mem.data_stack.push(mem.fregfile[target.address]);
+}
+
+void Instruction::op_pop(Memory & mem)
+{
+    if (mem.data_stack.size() <= 0) {
+        std::cerr << "Stack Error: Attempted to pop empty stack. Exiting..." << std::endl;
+        exit(-1);
+    }
+
+    if (target.check_flags(FLOATF))
+        mem.fregfile[target.address] = reinterpret_cast<f64&>(mem.data_stack.top());
+    else
+        mem.iregfile[target.address] = mem.data_stack.top();
+    
+    mem.data_stack.pop();
+}
+
+void Instruction::op_jmp(Memory& mem)
 {
     mem.pc_jmp((s64)(REG_AT(target, mem) + immediate));
 }

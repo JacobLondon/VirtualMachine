@@ -1,13 +1,13 @@
 # comment
 
-alias num1   0xff
-alias num2   0x0f
-alias myaddr 0xf000
+const num1   0xff
+const num2   0x0f
+const myaddr 0xf000
 
 main:
     # some useless constants
-    movi    r0      num1    # move num1 (0xff) into r0
-    movi    r1      num2    # move num2 (0x0f) into r1
+    mov     r0      num1    # move num1 (0xff) into r0
+    mov     r1      num2    # move num2 (0x0f) into r1
 
     # function call to makearr
     call    makearr
@@ -16,7 +16,7 @@ main:
 
 makearr:
     # for 10 clock cycles
-    movi    r4      10
+    mov     r4      10
 loop:
     # array of [9, 8, 7, ... 2, 1, 0]
     # at address myaddr[0 to 9]
