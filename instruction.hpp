@@ -1,4 +1,5 @@
 #pragma once
+#include <limits>
 #include "types.hpp"
 #include "memory.hpp"
 
@@ -58,14 +59,45 @@ public:
     void op_jmp(Memory& mem);
     void op_call(Memory& mem);
     void op_ret(Memory& mem);
+
 };
 
-#define REG_INC(reg, mem, value) do { \
-    if (reg >= REG_COUNT) \
-        mem.fregfile[reg - REG_COUNT] = mem.fregfile[reg - REG_COUNT] + value; \
-    else \
-        mem.iregfile[reg] = mem.iregfile[reg] + value; \
-} while (0)
+auto reg_increase = [](Memory& mem, u8 reg, auto value)
+{
+    if (reg >= REG_COUNT)
+        mem.fregfile[reg - REG_COUNT] = mem.fregfile[reg - REG_COUNT] + value;
+    else
+        mem.iregfile[reg] = mem.iregfile[reg] + value;
+};
+
+auto reg_set = [](Memory& mem, u8 reg, auto value)
+{
+    if (reg >= REG_COUNT)
+        mem.fregfile[reg - REG_COUNT] = value;
+    else
+        mem.iregfile[reg] = value;
+};
+
+auto reg_at = [](Memory& mem, u8 reg, auto value)
+{
+    return reg >= REG_COUNT
+        ? mem.fregfile[reg - REG_COUNT]
+        : mem.iregfile[reg];
+};
+
+auto reg_max = [](u8 reg)
+{
+    return reg >= REG_COUNT
+        ? std::numeric_limits<f64>::max()
+        : std::numeric_limits<s64>::max();
+};
+
+auto reg_min = [](u8 reg)
+{
+    return reg >= REG_COUNT
+        ? std::numeric_limits<f64>::min()
+        : std::numeric_limits<s64>::min();
+};
 
 #define REG_SET(reg, mem, value) do { \
     if (reg >= REG_COUNT) \

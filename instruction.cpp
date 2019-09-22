@@ -1,4 +1,3 @@
-#include <limits>
 #include <cmath>
 #include "instruction.hpp"
 
@@ -275,12 +274,12 @@ void Instruction::op_lw(Memory& mem)
 
 void Instruction::op_inc(Memory & mem)
 {
-    REG_INC(target, mem, 1);
+    reg_increase(mem, target, 1);
 }
 
 void Instruction::op_dec(Memory & mem)
 {
-    REG_INC(target, mem, -1);
+    reg_increase(mem, target, -1);
 }
 
 void Instruction::op_push(Memory & mem)
