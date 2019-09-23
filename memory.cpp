@@ -11,7 +11,7 @@ Memory::Memory(u64 dmem_size)
     dmem.reserve(dmem_size);
 }
 
-64 Memory::zero()
+s64 Memory::zero()
 {
     return iregfile[0];
 }

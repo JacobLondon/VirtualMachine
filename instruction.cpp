@@ -15,7 +15,11 @@ bool Instruction::check_flags(u8 flag)
 std::string Instruction::to_string()
 {
     std::string builder = "";
+    if (flags & BITF)
+        builder += "B";
     builder += OPCODE_LOOKUP[opcode];
+    if (flags & IMMF)
+        builder += "I";
     if (set_status)
         builder += "S";
     builder += SUFFIX_LOOKUP[suffix];
