@@ -10,36 +10,8 @@ Memory::Memory(u64 dmem_size)
 {
     dmem.reserve(dmem_size);
 }
-/*
-std::string Memory::dump()
-{
-    u32 len = 80;
-    std::string builder = "";
 
-    for (u64 i = 0; i < len; i++)
-        builder += "_";
-    builder += "\n\n";
-
-    builder += "\tInteger Registers\t\t\tFloat Registers\n";
-
-    for (u64 i = 0; i < len; i++)
-        builder += "_";
-    builder += "\n";
-
-    for (u64 i = 0; i < iregfile.size(); i++) {
-
-        std::string reg_hex = to_hex<s64>(iregfile[i]);
-
-        builder += std::to_string(i) + ((i == 0) ? " Zero\t" : (i == 31) ? " PC\t" : "\t");
-        builder += reg_hex + "\t" + std::to_string(iregfile[i]);
-
-        builder += "\t|\t" + std::to_string(fregfile[i]) + "\n";
-    }
-
-    return builder;
-}
-*/
-s64 Memory::zero()
+64 Memory::zero()
 {
     return iregfile[0];
 }
