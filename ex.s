@@ -4,8 +4,8 @@ const num1   0xff
 const num2   0x0f
 const myaddr 0xf000
 
-main:
-    # some useless constants
+main:    
+    # some useless constants        
     mov     r0      num1    # move num1 (0xff) into r0
     mov     r1      num2    # move num2 (0x0f) into r1
 

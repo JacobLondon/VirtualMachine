@@ -1,20 +1,12 @@
-OBJ_FILES=instruction.o memory.o parser.o processor.o tokens.o types.o
-LEX_FILES=parser.cpp
-YACC_FILES=tokens.cpp
+OBJ_FILES=main.o instruction.o memory.o parser.o processor.o display.o
+LIBS=-lncurses
 TARGET=VirtualMachine
 
 .PHONY: clean
-CXXFLAGS=-std=c++17
-YACCFLAGS=-d
+CXXFLAGS=-std=c++17 -ggdb
 
-$(TARGET) : $(YACC_FILES) $(LEX_FILES) $(OBJ_FILES)
-	$(CXX) -o $(TARGET) $(OBJ_FILES)
-
-%.cpp : %.flex
-	$(LEX) $(LEXFLAGS) -o $@ $< 
-
-%.cpp : %.bison
-	$(YACC) $(YACCFLAGS) -o $@ $<
+$(TARGET) : $(OBJ_FILES)
+	$(CXX) -o $(TARGET) $(OBJ_FILES) $(LIBS)
 
 clean : 
 	rm -rf *.o $(TARGET) $(LEX_FILES) $(YACC_FILES)

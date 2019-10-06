@@ -1,9 +1,13 @@
 #include <iostream>
+
 #include "processor.hpp"
+#include "parser.hpp"
 
 int main()
 {
     Processor p(1000);
+    //Parser parse("ex.s");
+    //parse.parse();
     /*
     p.mem.imem.push_back(Instruction(MOV, false, AL, RegisterRef(F1, FLOATF), RegisterRef(),         RegisterRef(),           255.6, IMMF));
     p.mem.imem.push_back(Instruction(MOV, false, AL, RegisterRef(R1, INTF),   RegisterRef(),         RegisterRef(),           10,    IMMF));
