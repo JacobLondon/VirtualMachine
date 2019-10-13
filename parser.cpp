@@ -12,10 +12,28 @@ Parser::Parser(const std::string& filename)
     : filename(filename)
 {}
 
+void trim(std::string& line) {
+    // Trim comments
+    auto commentChar = [] (char c) {
+        return c == '#';
+    };
+    auto startOfComment = std::find_if(line.begin(), line.end(), commentChar);
+    line.erase(startOfComment, line.end());
 
-std::vector<Instruction> Parser::parse()
+    // Trim the string
+    auto isntSpace = [] (char c) {
+        return !std::isspace(c);
+    };
+    auto firstNonSpace = std::find_if(line.begin(), line.end(), isntSpace);
+    line.erase(line.begin(), firstNonSpace);
+    auto lastSpace = std::find_if(line.rbegin(), line.rend(), isntSpace);
+    line.erase(lastSpace.base(), line.end());
+}
+
+Parser::InstLabelPair Parser::parse()
 {
-    std::vector<Instruction> output;
+    InstList instructions;
+    LabelMap labels;
 
     // Open the file
     std::ifstream file(filename);
@@ -33,33 +51,31 @@ std::vector<Instruction> Parser::parse()
         std::getline(file, line);
         DebugInfo info(lineNum, line);
 
-        // Trim comments
-        auto commentChar = [] (char c) {
-            return c == '#';
-        };
-        auto startOfComment = std::find_if(line.begin(), line.end(), commentChar);
-        line.erase(startOfComment, line.end());
-        
-        // Trim the string
-        auto isntSpace = [] (char c) {
-            return !std::isspace(c);
-        };
-        auto firstNonSpace = std::find_if(line.begin(), line.end(), isntSpace);
-        line.erase(line.begin(), firstNonSpace);
-        auto lastSpace = std::find_if(line.rbegin(), line.rend(), isntSpace);
-        line.erase(lastSpace.base(), line.end());
-
         // Skip if empty or comment
+        trim(line);
         if (line.empty()) {
             continue;
         }
+
+        // Check this line is a label
+        if (line.back() == ':') {
+            line.pop_back();
+            labels[line] = instructions.size();
+            info.print();
+            std::cout << line << ": Label \"" << line << "\"" << std::endl;
+            continue;
+        }
+
+        // Decode
+        
+
 
         info.print();
         std::cout << line << ", " << line.size() << std::endl;
     }
 
     // Return
-    return output;
+    return std::make_pair(instructions, labels);
 }
 
 DebugInfo::DebugInfo(const line_t& lineNum,
