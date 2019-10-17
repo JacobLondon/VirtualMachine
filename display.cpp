@@ -53,7 +53,7 @@ void Display::update(Memory& mem)
 
     write_str("Integer Registers", icol, 1);
     for (int i = 0; i < REG_COUNT; i++) {
-        buf = to_hex<s64>(mem.iregfile[i]);
+        buf = to_hex<Signed>(mem.iregfile[i]);
         buf += "\t";
         buf += std::to_string(mem.iregfile[i]);
         buf += "\t|";

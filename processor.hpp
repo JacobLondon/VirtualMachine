@@ -4,7 +4,7 @@
 
 class Processor {
 public:
-    Processor(u64 data_size);
+    Processor(Unsigned data_size);
 
     void execute();
     Memory mem;

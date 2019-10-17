@@ -3,14 +3,15 @@
 
 class Memory {
 public:
-    Memory(u64 dmem_size);
-    s64 zero();
-    s64 pc();
+    Memory(Unsigned dmem_size);
+    Signed zero();
+    Signed pc();
     void pc_rst();
     void pc_inc();
-    void pc_jmp(s64 address);
+    void pc_jmp(Signed address);
     void clear_flags();
-    void set_flags(f64 result);
+    void set_flags(Float result);
+    void insert(Instruction inst);
 
     struct flags {
         bool carry        = false;
@@ -22,14 +23,14 @@ public:
         bool always       = true;
     } flags;
     
-    std::vector<s64> iregfile;
-    std::vector<f64> fregfile;
+    std::vector<Signed> iregfile;
+    std::vector<Float> fregfile;
     std::vector<Instruction> imem;
-    std::vector<s64> dmem;
+    std::vector<Signed> dmem;
 
-    std::stack<s64> data_stack;
-    std::stack<u64> call_stack;
-    std::unordered_map<std::string, u64> labels;
+    std::stack<Signed> data_stack;
+    std::stack<Unsigned> call_stack;
+    std::unordered_map<std::string, Unsigned> labels;
 
 };
 
