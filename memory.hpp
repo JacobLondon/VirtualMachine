@@ -1,4 +1,6 @@
 #pragma once
+#include <stack>
+#include <unordered_map>
 #include "types.hpp"
 
 class Memory {

@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include <limits>
 #include "instruction.hpp"
 
@@ -20,9 +21,7 @@ Instruction::Instruction(
     register2{register2},
     immediate{immediate},
     flags{flags}
-{
-    
-}
+{}
 
 bool Instruction::check_flags(uint8_t flag)
 {

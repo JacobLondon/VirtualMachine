@@ -1,9 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <iostream>
-#include <stack>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #define WIDTH_64
@@ -19,8 +16,6 @@ using Unsigned = uint32_t;
 #endif
 
 class Instruction;
-//class Memory;
-//class Processor;
 
 const uint8_t REG_COUNT = 32;
 const uint8_t ZERO = 0;
