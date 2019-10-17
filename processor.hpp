@@ -4,10 +4,10 @@
 
 class Processor {
 public:
-    Processor(Unsigned data_size);
-
-    void execute();
+    
     Memory mem;
     bool done = false;
-
+    
+    Processor(Unsigned data_size);
+    void execute();
 };

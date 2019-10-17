@@ -11,6 +11,17 @@ enum InstructionFlags {
 class Instruction {
 public:
     
+    uint16_t opcode = 0;
+    bool     set_status = false;
+    uint8_t  suffix = 0;
+    uint8_t target;
+    uint8_t register1;
+    uint8_t register2;
+    Float immediate;
+    uint8_t flags = 0;
+
+    Memory *mem;
+
     Instruction(
         uint16_t opcode,
         bool     set_status,
@@ -25,20 +36,6 @@ public:
     std::string to_string();
     bool check_suffix();
     void execute();
-
-    uint16_t opcode = 0;
-
-    bool set_status = false;
-    uint8_t flags = 0;
-    uint8_t suffix = 0;
-
-    uint8_t target;
-    uint8_t register1;
-    uint8_t register2;
-
-    Float immediate;
-
-    Memory *mem;
 
     void op_add();
     void op_sub();
@@ -69,7 +66,6 @@ public:
     void op_jmp();
     void op_call();
     void op_ret();
-
 };
 
 auto reg_increase = [](Memory *mem, uint8_t reg, auto value)

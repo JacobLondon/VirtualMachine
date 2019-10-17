@@ -11,8 +11,8 @@ Instruction::Instruction(
     uint8_t  register1,
     uint8_t  register2,
     Float    immediate,
-    uint8_t  flags
-    ):
+    uint8_t  flags)
+    :
     opcode{opcode},
     set_status{set_status},
     suffix{suffix},

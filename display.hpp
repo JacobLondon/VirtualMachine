@@ -6,12 +6,13 @@ extern "C" {
 
 class Display {
 public:
+
+    Memory *mem;
+    bool step = true;
+
     Display(Memory *mem);
     ~Display();
     void startup();
     void update();
     void handle_keys();
-
-    Memory *mem;
-    bool step = true;
 };
