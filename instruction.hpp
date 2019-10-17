@@ -1,4 +1,7 @@
 #pragma once
+#ifndef INSTRUCTION_H_
+#define INSTRUCTION_H_
+
 #include "types.hpp"
 #include "memory.hpp"
 
@@ -90,3 +93,5 @@ auto reg_at = [](Memory *mem, uint8_t reg)
         ? mem->fregfile[reg - REG_COUNT]
         : mem->iregfile[reg];
 };
+
+#endif // INSTRUCTION_H_

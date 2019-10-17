@@ -1,6 +1,10 @@
 #pragma once
+#ifndef MEMORY_H_
+#define MEMORY_H_
+
 #include <stack>
 #include <unordered_map>
+
 #include "types.hpp"
 
 class Memory {
@@ -35,5 +39,7 @@ public:
         bool always       = true;
     } flags;
 };
+
+#endif // MEMORY_H_
 
 #include "instruction.hpp"

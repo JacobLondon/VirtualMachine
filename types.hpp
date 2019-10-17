@@ -1,4 +1,7 @@
 #pragma once
+#ifndef TYPES_H_
+#define TYPES_H_
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -115,3 +118,5 @@ const std::vector<std::string> OPCODE_LOOKUP {
     "CALL",
     "RET",
 };
+
+#endif // TYPES_H_
