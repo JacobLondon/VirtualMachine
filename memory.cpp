@@ -6,7 +6,7 @@
  */
 
 Memory::Memory(Unsigned dmem_size)
-    : iregfile{REG_COUNT, 0}, fregfile{REG_COUNT, 0.0}
+    : iregfile(REG_COUNT, 0), fregfile(REG_COUNT, 0.0)
 {
     dmem.reserve(dmem_size);
 }
