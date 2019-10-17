@@ -6,16 +6,25 @@
 #include <string>
 #include <vector>
 
-#define WIDTH_64
+#define REGISTER_WIDTH 64
 
-#ifdef WIDTH_64
-using Float    = double;
-using Signed   = int64_t;
-using Unsigned = uint64_t;
-#else
-using Float    = float;
-using Signed   = int32_t;
-using Unsigned = uint32_t;
+#ifndef REGISTER_WIDTH
+#   pragma message "Warning: Virtual Machine's REGISTER_WIDTH is not defined. Defaulting REGISTER_WIDTH = 32."
+#   define REGISTER_WIDTH 32
+#elif REGISTER_WIDTH != 64 && REGISTER_WIDTH != 32
+#   pragma message "Warning: Virtual Machine's REGISTER_WIDTH is neither 32 nor 64. Defaulting REGISTER_WIDTH = 32."
+#   undef  REGISTER_WIDTH
+#   define REGISTER_WIDTH 32
+#endif
+
+#if REGISTER_WIDTH == 64
+    using Float    = double;
+    using Signed   = int64_t;
+    using Unsigned = uint64_t;
+#elif REGISTER_WIDTH == 32
+    using Float    = float;
+    using Signed   = int32_t;
+    using Unsigned = uint32_t;
 #endif
 
 class Instruction;
