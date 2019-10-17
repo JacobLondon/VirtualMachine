@@ -94,4 +94,4 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | LT | Signed <
 | GT | Signed >
 | LE | Signed <=
-| AL | Any | Always. Normally omitted.
+| AL | Always. Normally omitted.
