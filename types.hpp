@@ -6,20 +6,25 @@
 #include <unordered_map>
 #include <vector>
 
-using f64 = double;
-using u8 = uint8_t;
-using u16 = uint16_t;
-using u32 = uint32_t;
-using u64 = uint64_t;
-using s64 = int64_t;
+#define WIDTH_64
+
+#ifdef WIDTH_64
+using Float    = double;
+using Signed   = int64_t;
+using Unsigned = uint64_t;
+#else
+using Float    = float;
+using Signed   = int32_t;
+using Unsigned = uint32_t;
+#endif
 
 class Instruction;
-class Memory;
-class Processor;
+//class Memory;
+//class Processor;
 
-const u8 REG_COUNT = 32;
-const u8 ZERO = 0;
-const u8 PC = 31;
+const uint8_t REG_COUNT = 32;
+const uint8_t ZERO = 0;
+const uint8_t PC = 31;
 
 enum Registers {
     // integer registers
