@@ -1,5 +1,4 @@
 #pragma once
-#include <limits>
 #include "types.hpp"
 #include "memory.hpp"
 
@@ -12,111 +11,86 @@ enum InstructionFlags {
 class Instruction {
 public:
     
-    Instruction(u16 opcode, bool set_status, u8 suffix, u8 target, u8 register1, u8 register2, f64 immediate, u8 flags);
-    bool check_flags(u8 flag);
+    Instruction(
+        uint16_t opcode,
+        bool     set_status,
+        uint8_t  suffix,
+        uint8_t  target,
+        uint8_t  register1,
+        uint8_t  register2,
+        Float    immediate,
+        uint8_t  flags
+    );
+    bool check_flags(uint8_t flag);
     std::string to_string();
-    bool check_suffix(Memory &memory);
-    void execute(Memory& memory);
+    bool check_suffix();
+    void execute();
 
-    u16 opcode = 0;
+    uint16_t opcode = 0;
 
     bool set_status = false;
-    u8 flags = 0;
-    u8 suffix = 0;
+    uint8_t flags = 0;
+    uint8_t suffix = 0;
 
-    u8 target;
-    u8 register1;
-    u8 register2;
+    uint8_t target;
+    uint8_t register1;
+    uint8_t register2;
 
-    f64 immediate;
+    Float immediate;
 
-    void op_add(Memory& mem);
-    void op_sub(Memory& mem);
-    void op_mul(Memory& mem);
-    void op_div(Memory& mem);
-    void op_mod(Memory& mem);
-    void op_nand(Memory& mem);
-    void op_and(Memory& mem);
-    void op_xnor(Memory& mem);
-    void op_xor(Memory& mem);
-    void op_nor(Memory& mem);
-    void op_or(Memory& mem);
-    void op_not(Memory& mem);
-    void op_comp(Memory& mem);
-    void op_shr(Memory& mem);
-    void op_shl(Memory& mem);
-    void op_cmp(Memory& mem);
-    void op_swp(Memory& mem);
-    void op_mov(Memory& mem);
-    void op_set(Memory& mem);
-    void op_clr(Memory& mem);
-    void op_sw(Memory& mem);
-    void op_lw(Memory& mem);
-    void op_inc(Memory & mem);
-    void op_dec(Memory & mem);
-    void op_push(Memory & mem);
-    void op_pop(Memory & mem);
-    void op_jmp(Memory& mem);
-    void op_call(Memory& mem);
-    void op_ret(Memory& mem);
+    Memory *mem;
+
+    void op_add();
+    void op_sub();
+    void op_mul();
+    void op_div();
+    void op_mod();
+    void op_nand();
+    void op_and();
+    void op_xnor();
+    void op_xor();
+    void op_nor();
+    void op_or();
+    void op_not();
+    void op_comp();
+    void op_shr();
+    void op_shl();
+    void op_cmp();
+    void op_swp();
+    void op_mov();
+    void op_set();
+    void op_clr();
+    void op_sw();
+    void op_lw();
+    void op_inc();
+    void op_dec();
+    void op_push();
+    void op_pop();
+    void op_jmp();
+    void op_call();
+    void op_ret();
 
 };
 
-auto reg_increase = [](Memory& mem, u8 reg, auto value)
+auto reg_increase = [](Memory *mem, uint8_t reg, auto value)
 {
     if (reg >= REG_COUNT)
-        mem.fregfile[reg - REG_COUNT] = mem.fregfile[reg - REG_COUNT] + value;
+        mem->fregfile[reg - REG_COUNT] = mem->fregfile[reg - REG_COUNT] + value;
     else
-        mem.iregfile[reg] = mem.iregfile[reg] + value;
+        mem->iregfile[reg] = mem->iregfile[reg] + value;
 };
 
-auto reg_set = [](Memory& mem, u8 reg, auto value)
+auto reg_set = [](Memory *mem, uint8_t reg, auto value)
 {
     if (reg >= REG_COUNT)
-        mem.fregfile[reg - REG_COUNT] = value;
+        mem->fregfile[reg - REG_COUNT] = value;
     else
-        mem.iregfile[reg] = value;
+        mem->iregfile[reg] = value;
 };
 
-auto reg_at = [](Memory& mem, u8 reg, auto value)
+auto reg_at = [](Memory *mem, uint8_t reg)
 {
     return reg >= REG_COUNT
-        ? mem.fregfile[reg - REG_COUNT]
-        : mem.iregfile[reg];
+        ? mem->fregfile[reg - REG_COUNT]
+        : mem->iregfile[reg];
 };
-
-auto reg_max = [](u8 reg)
-{
-    return reg >= REG_COUNT
-        ? std::numeric_limits<f64>::max()
-        : std::numeric_limits<s64>::max();
-};
-
-auto reg_min = [](u8 reg)
-{
-    return reg >= REG_COUNT
-        ? std::numeric_limits<f64>::min()
-        : std::numeric_limits<s64>::min();
-};
-
-#define REG_SET(reg, mem, value) do { \
-    if (reg >= REG_COUNT) \
-        mem.fregfile[reg - REG_COUNT] = value; \
-    else \
-        mem.iregfile[reg] = value; \
-} while (0)
-
-#define REG_AT(reg, mem) \
-    (reg >= REG_COUNT  \
-    ? mem.fregfile[reg - REG_COUNT] \
-    : mem.iregfile[reg])
-
-#define REG_MAX(reg) \
-    (reg >= REG_COUNT \
-    ? std::numeric_limits<f64>::max() \
-    : std::numeric_limits<s64>::max())
-
-#define REG_MIN(reg) \
-    (reg >= REG_COUNT \
-    ? std::numeric_limits<f64>::min() \
-    : std::numeric_limits<s64>::min())
