@@ -1,9 +1,11 @@
 # Virtual Machine
-A virtual processor which has similar characteristics to an ARM processor. Written in C++. Due to the nature of the processor being in software, the instructions will not follow fixed length formats. Additionally, the virtual machine will be a single cycle system; parallelism is not planned for at this stage. The virtual machine will be a 64-bit system; therefore the host machine must be able to support 64-bit C++ operations.
+A virtual processor which has some characteristics similar to an ARM or MIPS processor. Written in C++ for interaction with C++ from scripts. Due to the nature of the processor being in software, the instructions will not follow fixed length formats. Additionally, the virtual machine will be a single cycle system; parallelism is not planned for at this stage. The virtual machine can be either a 32-bit or 64-bit system based on the REGISTER_WIDTH macro (defaults to 32 if unspecified).
 ## Requirements
-* Must be able to link ncurses.h
-* Due to an issue with ncurses' interaction with printing repeated characters, $TERM (on an Ubuntu system) must be set to `gnome`
-  * `export TERM=gnome`
+* C++ 17 is used
+* NCurses
+  * Must be able to link ncurses.h
+  * Due to an issue with ncurses' interaction with printing repeated characters, $TERM (on an Ubuntu system) must be set to `gnome`
+  * `$ export TERM=gnome`
   * This issue may be different depending on the system.
 ## Registers
 * 32 64-bit integer registers
@@ -95,3 +97,7 @@ A virtual processor which has similar characteristics to an ARM processor. Writt
 | GT | Signed >
 | LE | Signed <=
 | AL | Always. Normally omitted.
+
+## Debug Screen
+![](images/Debug.png)
+A debug view of the virtual machine with all of its registers, status flags, and step by step instructions.
